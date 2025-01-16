@@ -60,3 +60,5 @@ test
 *.dot
 /html
 /latex
+
+.vscode/

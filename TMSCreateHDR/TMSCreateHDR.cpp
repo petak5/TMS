@@ -38,29 +38,37 @@ int TMSCreateHDR::main(int argc, char *argv[])
 {
 	std::string inputFileName1;
 	std::string inputFileName2;
+	float inputFileTime1;
+	float inputFileTime2;
 	std::string outputFileName = "output";
 
 	// Parse args
-	if (argc == 3)
+	if (argc == 5)
 	{
 		inputFileName1 = argv[1];
-		inputFileName2 = argv[2];
+		inputFileName2 = argv[3];
+		inputFileTime1 = std::stof(argv[2]);
+		inputFileTime2 = std::stof(argv[4]);
 	}
-	else if (argc == 5)
+	else if (argc == 7)
 	{
 		if (strcmp(argv[1], "-o") == 0)
 		{
 			outputFileName = argv[2];
 
 			inputFileName1 = argv[3];
-			inputFileName2 = argv[4];
+			inputFileName2 = argv[5];
+			inputFileTime1 = std::stof(argv[4]);
+			inputFileTime2 = std::stof(argv[6]);
 		}
-		else if (strcmp(argv[3], "-o") == 0)
+		else if (strcmp(argv[5], "-o") == 0)
 		{
-			outputFileName = argv[4];
+			outputFileName = argv[6];
 
 			inputFileName1 = argv[1];
-			inputFileName2 = argv[2];
+			inputFileName2 = argv[3];
+			inputFileTime1 = std::stof(argv[2]);
+			inputFileTime2 = std::stof(argv[4]);
 		}
 		else
 		{
@@ -80,7 +88,7 @@ int TMSCreateHDR::main(int argc, char *argv[])
 	int numImages = 2;
 
 	// List of exposure times
-	static const float timesArray[] = {1.0f, 6.0f};
+	static const float timesArray[] = {inputFileTime1, inputFileTime2};
 	times.assign(timesArray, timesArray + numImages);
 
 	// List of image filenames
@@ -110,5 +118,5 @@ int TMSCreateHDR::main(int argc, char *argv[])
 void TMSCreateHDR::Help()
 {
 	wprintf(L"Usage : \n");
-	wprintf(L"    ./TMSCreateHDR [-o output] image1 image2\n\n");
+	wprintf(L"    ./TMSCreateHDR [-o output] image1 exposureTime1 image2 exposureTime2\n\n");
 }

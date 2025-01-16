@@ -27,6 +27,8 @@
 #include <algorithm>
 #include <opencv2/opencv.hpp>
 
+#define DEBUG true
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -50,7 +52,7 @@ int TMSRegister::main(int argc, char *argv[])
 {
 	std::string inputFileName1;
 	std::string inputFileName2;
-	std::string outputFileName = "aligned";
+	std::string outputFolder = "./aligned";
 
 	// Parse args
 	if (argc == 3)
@@ -62,14 +64,14 @@ int TMSRegister::main(int argc, char *argv[])
 	{
 		if (strcmp(argv[1], "-o") == 0)
 		{
-			outputFileName = argv[2];
+			outputFolder = argv[2];
 
 			inputFileName1 = argv[3];
 			inputFileName2 = argv[4];
 		}
 		else if (strcmp(argv[3], "-o") == 0)
 		{
-			outputFileName = argv[4];
+			outputFolder = argv[4];
 
 			inputFileName1 = argv[1];
 			inputFileName2 = argv[2];
@@ -190,20 +192,23 @@ int TMSRegister::main(int argc, char *argv[])
 		return 1;
 	}
 
-	std::cout << "Drawing matches..." << std::endl;
+	if (DEBUG)
+	{
+		std::cout << "Drawing matches..." << std::endl;
 
-	cv::Mat imgKeypoints1, imgKeypoints2;
-	drawKeypoints(bw_images[0], keypoints[0], imgKeypoints1, cv::Scalar::all(-1), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-	drawKeypoints(bw_images[1], keypoints[1], imgKeypoints2, cv::Scalar::all(-1), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-	cv::imwrite("../../Images/keypoints1.png", imgKeypoints1);
-	cv::imwrite("../../Images/keypoints2.png", imgKeypoints2);
+		cv::Mat imgKeypoints1, imgKeypoints2;
+		drawKeypoints(bw_images[0], keypoints[0], imgKeypoints1, cv::Scalar::all(-1), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+		drawKeypoints(bw_images[1], keypoints[1], imgKeypoints2, cv::Scalar::all(-1), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+		cv::imwrite(outputFolder + "/debug/keypoints1.jpg", imgKeypoints1);
+		cv::imwrite(outputFolder + "/debug/keypoints2.jpg", imgKeypoints2);
 
-	cv::Mat imgMatches;
-	cv::drawMatches(bw_images[0], keypoints[0], bw_images[1], keypoints[1], goodMatches, imgMatches, cv::Scalar::all(-1), cv::Scalar::all(-1), mask, cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+		cv::Mat imgMatches;
+		cv::drawMatches(bw_images[0], keypoints[0], bw_images[1], keypoints[1], goodMatches, imgMatches, cv::Scalar::all(-1), cv::Scalar::all(-1), mask, cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
-	cv::imwrite("../../Images/matches.png", imgMatches);
+		cv::imwrite(outputFolder + "/debug/matches.jpg", imgMatches);
 
-	std::cout << "Done" << std::endl;
+		std::cout << "Done" << std::endl;
+	}
 
 	// Source image (index 0) is warped to match Target image (index 1)
 
@@ -212,34 +217,40 @@ int TMSRegister::main(int argc, char *argv[])
 	cv::Mat cropped_aligned_s = crop_image(uncropped_aligned_s, M);
 	cv::Mat cropped_t = crop_image(images[1], M);
 
-	// Save uncropped and aligned images
-	cv::imwrite("../../Images/uncropped_target.png", images[1]);
-	cv::imwrite("../../Images/uncropped_aligned_s.png", uncropped_aligned_s);
+	if (DEBUG)
+	{
+		// Save uncropped and aligned images
+		cv::imwrite(outputFolder + "/debug/uncropped_target.jpg", images[1]);
+		cv::imwrite(outputFolder + "/debug/uncropped_aligned_s.jpg", uncropped_aligned_s);
+	}
 
 	// Save cropped images
-	cv::imwrite("../../Images/cropped_s.png", cropped_aligned_s);
-	cv::imwrite("../../Images/cropped_t.png", cropped_t);
+	cv::imwrite(outputFolder + "/cropped_s.jpg", cropped_aligned_s);
+	cv::imwrite(outputFolder + "/cropped_t.jpg", cropped_t);
 
-	// Extended and aligned images
-	cv::Mat extended_aligned_s, extended_t;
-	std::tie(extended_aligned_s, extended_t) = align_and_resize_images(images[0], images[1], M);
+	if (DEBUG)
+	{
+		// Extended and aligned images
+		cv::Mat extended_aligned_s, extended_t;
+		std::tie(extended_aligned_s, extended_t) = align_and_resize_images(images[0], images[1], M);
 
-	// Save extended aligned images
-	cv::imwrite("../../Images/extended_aligned_s.png", extended_aligned_s);
-	cv::imwrite("../../Images/extended_t.png", extended_t);
+		// Save extended aligned images
+		cv::imwrite(outputFolder + "/debug/extended_aligned_s.jpg", extended_aligned_s);
+		cv::imwrite(outputFolder + "/debug/extended_t.jpg", extended_t);
 
-	// Diff images
-	cv::Mat diff_orig, diff_cropped_1, diff_cropped_2, diff_extended;
-	cv::absdiff(images[0], images[1], diff_orig);
-	cv::absdiff(cropped_aligned_s, cropped_t, diff_cropped_1);
-	cv::absdiff(cropped_t, cropped_aligned_s, diff_cropped_2);
-	cv::absdiff(extended_aligned_s, extended_t, diff_extended);
+		// Diff images
+		cv::Mat diff_orig, diff_cropped_1, diff_cropped_2, diff_extended;
+		cv::absdiff(images[0], images[1], diff_orig);
+		cv::absdiff(cropped_aligned_s, cropped_t, diff_cropped_1);
+		cv::absdiff(cropped_t, cropped_aligned_s, diff_cropped_2);
+		cv::absdiff(extended_aligned_s, extended_t, diff_extended);
 
-	// Save diff images
-	cv::imwrite("../../Images/diff_orig.png", diff_orig);
-	cv::imwrite("../../Images/diff_cropped_1.png", diff_cropped_1);
-	cv::imwrite("../../Images/diff_cropped_2.png", diff_cropped_2);
-	cv::imwrite("../../Images/diff_extended.png", diff_extended);
+		// Save diff images
+		cv::imwrite(outputFolder + "/debug/diff_orig.jpg", diff_orig);
+		cv::imwrite(outputFolder + "/debug/diff_cropped_1.jpg", diff_cropped_1);
+		cv::imwrite(outputFolder + "/debug/diff_cropped_2.jpg", diff_cropped_2);
+		cv::imwrite(outputFolder + "/debug/diff_extended.jpg", diff_extended);
+	}
 
 	std::cout << "Done all" << std::endl;
 
