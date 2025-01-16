@@ -22,12 +22,14 @@ ${CMAKE_DL_LIBS}
 
 SET(TMSREGISTER_SOURCES
  TMSRegister.cpp
+ TMSAlignHomographyMethod.cpp
  main.cpp
 )
 
 
 SET(TMSREGISTER_HEADERS
  TMSRegister.h
+ TMSAlignHomographyMethod.h
 )
 
 
