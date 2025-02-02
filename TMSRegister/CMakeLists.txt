@@ -23,6 +23,8 @@ ${CMAKE_DL_LIBS}
 SET(TMSREGISTER_SOURCES
  TMSRegister.cpp
  TMSAlignHomographyMethod.cpp
+ TMSAlignOpticalFlowMethod.cpp
+ TMSAlignMTBMethod.cpp
  main.cpp
 )
 
@@ -30,6 +32,8 @@ SET(TMSREGISTER_SOURCES
 SET(TMSREGISTER_HEADERS
  TMSRegister.h
  TMSAlignHomographyMethod.h
+ TMSAlignOpticalFlowMethod.h
+ TMSAlignMTBMethod.h
 )
 
 

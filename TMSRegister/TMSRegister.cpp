@@ -27,6 +27,8 @@
 #include <opencv2/opencv.hpp>
 
 #include "TMSAlignHomographyMethod.h"
+#include "TMSAlignOpticalFlowMethod.h"
+#include "TMSAlignMTBMethod.h"
 
 #define DEBUG true
 
@@ -42,7 +44,7 @@ TMSRegister::~TMSRegister()
 {
 }
 
-const int RESIZE_RATIO = 4;
+const int RESIZE_RATIO = 2;
 
 int TMSRegister::main(int argc, char *argv[])
 {
@@ -106,12 +108,18 @@ int TMSRegister::main(int argc, char *argv[])
 
 	std::cout << "Done loading images" << std::endl;
 
+	// Feature points with homography and Optical Flow
 	TMSAlignHomographyMethod alignMethod;
+	// TMSAlignOpticalFlowMethod alignMethod;
 	std::vector<cv::Mat> alignedImages = alignMethod.align(images, RESIZE_RATIO, debugOutput, DEBUG);
 
+	// MTB
+	// TMSAlignMTBMethod alignMethod;
+	// std::vector<cv::Mat> alignedImages = alignMethod.align(images, debugOutput, DEBUG);
+
 	// Save cropped images
-	cv::imwrite(outputFolder + "/cropped_s.jpg", images[0]);
-	cv::imwrite(outputFolder + "/cropped_t.jpg", images[1]);
+	cv::imwrite(outputFolder + "/cropped_s.jpg", alignedImages[0]);
+	cv::imwrite(outputFolder + "/cropped_t.jpg", alignedImages[1]);
 
 	std::cout << "Done all" << std::endl;
 
@@ -121,5 +129,5 @@ int TMSRegister::main(int argc, char *argv[])
 void TMSRegister::Help()
 {
 	wprintf(L"Usage : \n");
-	wprintf(L"    ./TMSRegister [-o output] image1 image2\n\n");
+	wprintf(L"    ./TMSRegister [-o outputFolder] image1 image2\n\n");
 }

@@ -1,4 +1,4 @@
-// TMSAlignHomographyMethod.cpp: implementation of the TMSCreateHDR class.
+// TMSAlignHomographyMethod.cpp: implementation of the TMSAlignHomographyMethod class.
 //
 //////////////////////////////////////////////////////////////////////
 
