@@ -31,10 +31,10 @@ TMOLiu16.h
 
 add_library( liu16 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET liu16 POST_BUILD 
-	COMMAND cp -f libliu16.so ../TMOCmd/liu16.tml
-	COMMAND cp -f libliu16.so ../TMOgui/liu16.tml 
-	COMMAND cp -f libliu16.so ../liu16.tml 
-#	COMMAND rm -f libliu16.so 
+	COMMAND cp -f libliu16${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/liu16.tml
+	COMMAND cp -f libliu16${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/liu16.tml 
+	COMMAND cp -f libliu16${CMAKE_SHARED_LIBRARY_SUFFIX} ../liu16.tml 
+#	COMMAND rm -f libliu16${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( yourOperator SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET yourOperator POST_BUILD 
-	COMMAND cp -f libyourOperator.so ../TMOCmd/yourOperator.tml
-	COMMAND cp -f libyourOperator.so ../TMOgui/yourOperator.tml 
-	COMMAND cp -f libyourOperator.so ../yourOperator.tml 
-#	COMMAND rm -f libyourOperator.so 
+	COMMAND cp -f libyourOperator${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/yourOperator.tml
+	COMMAND cp -f libyourOperator${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/yourOperator.tml 
+	COMMAND cp -f libyourOperator${CMAKE_SHARED_LIBRARY_SUFFIX} ../yourOperator.tml 
+#	COMMAND rm -f libyourOperator${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

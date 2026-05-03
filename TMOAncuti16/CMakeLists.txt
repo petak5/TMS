@@ -45,10 +45,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Ancuti16 SHARED ${TMO_SOURCES} )
  add_custom_command( TARGET Ancuti16 POST_BUILD 
- 	COMMAND cp -f libAncuti16.so ../TMOCmd/Ancuti16.tml
- 	COMMAND cp -f libAncuti16.so ../TMOgui/Ancuti16.tml 
- 	COMMAND cp -f libAncuti16.so ../Ancuti16.tml 
- #	COMMAND rm -f libAncuti16.so 
+ 	COMMAND cp -f libAncuti16${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Ancuti16.tml
+ 	COMMAND cp -f libAncuti16${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Ancuti16.tml 
+ 	COMMAND cp -f libAncuti16${CMAKE_SHARED_LIBRARY_SUFFIX} ../Ancuti16.tml 
+ #	COMMAND rm -f libAncuti16${CMAKE_SHARED_LIBRARY_SUFFIX} 
   	)
 
 

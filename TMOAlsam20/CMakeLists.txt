@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( alsam20 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET alsam20 POST_BUILD 
-	COMMAND cp -f libalsam20.so ../TMOCmd/alsam20.tml
-	COMMAND cp -f libalsam20.so ../TMOgui/alsam20.tml 
-	COMMAND cp -f libalsam20.so ../alsam20.tml 
-#	COMMAND rm -f libalsam20.so 
+	COMMAND cp -f libalsam20${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/alsam20.tml
+	COMMAND cp -f libalsam20${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/alsam20.tml 
+	COMMAND cp -f libalsam20${CMAKE_SHARED_LIBRARY_SUFFIX} ../alsam20.tml 
+#	COMMAND rm -f libalsam20${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

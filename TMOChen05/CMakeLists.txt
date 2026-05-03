@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( chen05 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET chen05 POST_BUILD 
-	COMMAND cp -f libchen05.so ../TMOCmd/chen05.tml
-	COMMAND cp -f libchen05.so ../TMOgui/chen05.tml 
-	COMMAND cp -f libchen05.so ../chen05.tml 
-#	COMMAND rm -f libchen05.so 
+	COMMAND cp -f libchen05${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/chen05.tml
+	COMMAND cp -f libchen05${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/chen05.tml 
+	COMMAND cp -f libchen05${CMAKE_SHARED_LIBRARY_SUFFIX} ../chen05.tml 
+#	COMMAND rm -f libchen05${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

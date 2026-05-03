@@ -229,7 +229,7 @@ cv::Mat TMOAncuti11::decolorization(cv::Mat &input, double eta, double phi)
 		{
 			double hueRad = (H.at<float>(i,j) * kappa) * (CV_PI / 180.0); //convert to radians
 			double cos = std::cos(hueRad + phiRad);
-			if(mask.at<int>(i,j) == 255)
+			if(mask.at<uchar>(i,j) == 255)
 			{
 				//highlighted region
 				double tmp = L.at<float>(i,j) + gamma * averageLS * cos;

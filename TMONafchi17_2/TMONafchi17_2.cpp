@@ -162,7 +162,7 @@ int TMONafchi17_2::Transform()
 
    // this should be max value of standard deviation in pixel
    // values for standard deviation are normalized with this value
-   const double dThrs = (147.2243d / 255.0d);
+   const double dThrs = (147.2243 / 255.0);
 
 	int j = 0, index = 0;
 
@@ -178,8 +178,8 @@ int TMONafchi17_2::Transform()
          cSums[1] += gVect[index] = pixel[1];
          cSums[2] += bVect[index] = pixel[2];
 
-         u = (pixel[0] + pixel[1] + pixel[2]) / 3.0d;
-         d = std::sqrt((std::pow(pixel[0] -  u, 2) + std::pow(pixel[1] -  u, 2) + std::pow(pixel[2] -  u, 2)) / 2.0d) / dThrs;
+         u = (pixel[0] + pixel[1] + pixel[2]) / 3.0;
+         d = std::sqrt((std::pow(pixel[0] -  u, 2) + std::pow(pixel[1] -  u, 2) + std::pow(pixel[2] -  u, 2)) / 2.0) / dThrs;
 
          if (comParam) {
             d = 1 - d;

@@ -29,11 +29,11 @@ SET(TMOWARD_HEADERS
 
 
 add_library( ward94 SHARED ${TMOWARD_SOURCES} )
-add_custom_command( TARGET ward94 POST_BUILD 
-	COMMAND cp -f libward94.so ../TMOCmd/ward94.tml
-	COMMAND cp -f libward94.so ../TMOgui/ward94.tml 
-	COMMAND cp -f libward94.so ../ward94.tml 
-#	COMMAND rm -f libward94.so 
+add_custom_command( TARGET ward94 POST_BUILD
+	COMMAND cp -f libward94${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/ward94.tml
+	COMMAND cp -f libward94${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/ward94.tml
+	COMMAND cp -f libward94${CMAKE_SHARED_LIBRARY_SUFFIX} ../ward94.tml
+#	COMMAND rm -f libward94${CMAKE_SHARED_LIBRARY_SUFFIX}
 	)
 
 

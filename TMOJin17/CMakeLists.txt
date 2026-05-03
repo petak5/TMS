@@ -63,10 +63,10 @@ SET(TMOKUHN_HEADERS
 
 add_library( Jin17 SHARED ${TMOJIN_SOURCES} )
 add_custom_command( TARGET Jin17 POST_BUILD
-	COMMAND cp -f libJin17.so ../TMOCmd/Jin17.tml
-	COMMAND cp -f libJin17.so ../TMOgui/Jin17.tml
-	COMMAND cp -f libJin17.so ../Jin17.tml
-#	COMMAND rm -f libJin17.so
+	COMMAND cp -f libJin17${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Jin17.tml
+	COMMAND cp -f libJin17${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Jin17.tml
+	COMMAND cp -f libJin17${CMAKE_SHARED_LIBRARY_SUFFIX} ../Jin17.tml
+#	COMMAND rm -f libJin17${CMAKE_SHARED_LIBRARY_SUFFIX}
 	)
 
 

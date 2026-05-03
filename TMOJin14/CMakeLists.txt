@@ -41,10 +41,10 @@ SET(TMOWARD_HEADERS
 
 add_library( jin14 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET jin14 POST_BUILD 
-	COMMAND cp -f libjin14.so ../TMOCmd/jin14.tml
-	COMMAND cp -f libjin14.so ../TMOgui/jin14.tml 
-	COMMAND cp -f libjin14.so ../jin14.tml 
-#	COMMAND rm -f libjin14.so 
+	COMMAND cp -f libjin14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/jin14.tml
+	COMMAND cp -f libjin14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/jin14.tml 
+	COMMAND cp -f libjin14${CMAKE_SHARED_LIBRARY_SUFFIX} ../jin14.tml 
+#	COMMAND rm -f libjin14${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

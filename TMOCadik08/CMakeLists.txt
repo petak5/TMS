@@ -46,10 +46,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Cadik08 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Cadik08 POST_BUILD
-	COMMAND cp -f libCadik08.so ../TMOCmd/Cadik08.tml
-	COMMAND cp -f libCadik08.so ../TMOgui/Cadik08.tml 
-	COMMAND cp -f libCadik08.so ../Cadik08.tml
-#	COMMAND rm -f libCadik08.so
+	COMMAND cp -f libCadik08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Cadik08.tml
+	COMMAND cp -f libCadik08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Cadik08.tml 
+	COMMAND cp -f libCadik08${CMAKE_SHARED_LIBRARY_SUFFIX} ../Cadik08.tml
+#	COMMAND rm -f libCadik08${CMAKE_SHARED_LIBRARY_SUFFIX}
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/*.txt ${CMAKE_CURRENT_BINARY_DIR}/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/*.TXT ${CMAKE_CURRENT_BINARY_DIR}/
 

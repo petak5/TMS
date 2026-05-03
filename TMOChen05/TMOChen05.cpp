@@ -525,7 +525,7 @@ int TMOChen05::Transform()
          {
             for(int l=i; l < i+8; l++)
             {
-               if(contours.at<double>(k, l) != 0.0)          // if there is edge in any pixel of current block we dont create it and proceed to create 16 small blocks of 2x2 size
+               if(contours.at<uchar>(k, l) != 0)          // if there is edge in any pixel of current block we dont create it and proceed to create 16 small blocks of 2x2 size
                {
                   edgeDetected = 1;
                   break;

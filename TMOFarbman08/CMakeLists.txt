@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( farbman08 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET farbman08 POST_BUILD 
-	COMMAND cp -f libfarbman08.so ../TMOCmd/farbman08.tml
-	COMMAND cp -f libfarbman08.so ../TMOgui/farbman08.tml 
-	COMMAND cp -f libfarbman08.so ../farbman08.tml 
-#	COMMAND rm -f libfarbman08.so 
+	COMMAND cp -f libfarbman08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/farbman08.tml
+	COMMAND cp -f libfarbman08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/farbman08.tml 
+	COMMAND cp -f libfarbman08${CMAKE_SHARED_LIBRARY_SUFFIX} ../farbman08.tml 
+#	COMMAND rm -f libfarbman08${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

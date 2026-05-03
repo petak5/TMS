@@ -28,6 +28,6 @@ target_link_libraries(
 )
 
 add_custom_command( TARGET Khan20 POST_BUILD
-        COMMAND cp -f libKhan20.so ../TMOgui/Khan20.tml
-        COMMAND cp -f libKhan20.so ../Khan20.tml
+        COMMAND cp -f libKhan20${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Khan20.tml
+        COMMAND cp -f libKhan20${CMAKE_SHARED_LIBRARY_SUFFIX} ../Khan20.tml
 )

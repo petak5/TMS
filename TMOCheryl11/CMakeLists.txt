@@ -38,10 +38,10 @@ SET(TMOWARD_HEADERS
 
 add_library( cheryl11 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET cheryl11 POST_BUILD 
-	COMMAND cp -f libcheryl11.so ../TMOCmd/cheryl11.tml
-	#COMMAND cp -f libcheryl11.so ../TMOgui/cheryl11.tml 
-	COMMAND cp -f libcheryl11.so ../cheryl11.tml 
-#	COMMAND rm -f libcheryl11.so 
+	COMMAND cp -f libcheryl11${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/cheryl11.tml
+	#COMMAND cp -f libcheryl11${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/cheryl11.tml 
+	COMMAND cp -f libcheryl11${CMAKE_SHARED_LIBRARY_SUFFIX} ../cheryl11.tml 
+#	COMMAND rm -f libcheryl11${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

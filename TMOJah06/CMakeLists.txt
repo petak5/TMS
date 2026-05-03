@@ -48,11 +48,11 @@ SET(TMOWARD_HEADERS
 
 add_library( jah06 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET jah06 POST_BUILD 
-	COMMAND cp -f libjah06.so ../TMOCmd/jah06.tml
-	COMMAND cp -f libjah06.so ../TMOgui/jah06.tml 
-	COMMAND cp -f libjah06.so ../jah06.tml
+	COMMAND cp -f libjah06${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/jah06.tml
+	COMMAND cp -f libjah06${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/jah06.tml 
+	COMMAND cp -f libjah06${CMAKE_SHARED_LIBRARY_SUFFIX} ../jah06.tml
 	COMMAND cp -f ../../TMOJah06/model.pt ../model.pt
-#	COMMAND rm -f libjah06.so 
+#	COMMAND rm -f libjah06${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

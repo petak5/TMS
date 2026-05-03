@@ -56,10 +56,10 @@ SET(TMOWARD_HEADERS
 
 add_library( eisemann04 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET eisemann04 POST_BUILD 
-	COMMAND cp -f libeisemann04.so ../TMOCmd/eisemann04.tml
-	COMMAND cp -f libeisemann04.so ../TMOgui/eisemann04.tml 
-	COMMAND cp -f libeisemann04.so ../eisemann04.tml 
-#	COMMAND rm -f libeisemann04.so 
+	COMMAND cp -f libeisemann04${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/eisemann04.tml
+	COMMAND cp -f libeisemann04${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/eisemann04.tml 
+	COMMAND cp -f libeisemann04${CMAKE_SHARED_LIBRARY_SUFFIX} ../eisemann04.tml 
+#	COMMAND rm -f libeisemann04${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

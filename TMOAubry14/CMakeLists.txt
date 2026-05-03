@@ -42,8 +42,8 @@ SET(TMOWARD_HEADERS
 
 add_library( Aubry14 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Aubry14 POST_BUILD
-	COMMAND cp -f libAubry14.so ../TMOCmd/Aubry14.tml
-	COMMAND cp -f libAubry14.so ../TMOgui/Aubry14.tml
-	COMMAND cp -f libAubry14.so ../Aubry14.tml
-#	COMMAND rm -f libAubry14.so
+	COMMAND cp -f libAubry14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Aubry14.tml
+	COMMAND cp -f libAubry14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Aubry14.tml
+	COMMAND cp -f libAubry14${CMAKE_SHARED_LIBRARY_SUFFIX} ../Aubry14.tml
+#	COMMAND rm -f libAubry14${CMAKE_SHARED_LIBRARY_SUFFIX}
 	)

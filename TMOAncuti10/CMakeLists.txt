@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( ancuti10 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET ancuti10 POST_BUILD 
-	COMMAND cp -f libancuti10.so ../TMOCmd/ancuti10.tml
-	COMMAND cp -f libancuti10.so ../TMOgui/ancuti10.tml 
-	COMMAND cp -f libancuti10.so ../ancuti10.tml 
-#	COMMAND rm -f libancuti10.so 
+	COMMAND cp -f libancuti10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/ancuti10.tml
+	COMMAND cp -f libancuti10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/ancuti10.tml 
+	COMMAND cp -f libancuti10${CMAKE_SHARED_LIBRARY_SUFFIX} ../ancuti10.tml 
+#	COMMAND rm -f libancuti10${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

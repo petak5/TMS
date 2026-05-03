@@ -40,10 +40,10 @@ SET(TMOWARD_HEADERS
 
 add_library( zhao10 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET zhao10 POST_BUILD 
-	COMMAND cp -f libzhao10.so ../TMOCmd/zhao10.tml
-	COMMAND cp -f libzhao10.so ../TMOgui/zhao10.tml 
-	COMMAND cp -f libzhao10.so ../zhao10.tml 
-#	COMMAND rm -f libzhao10.so 
+	COMMAND cp -f libzhao10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/zhao10.tml
+	COMMAND cp -f libzhao10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/zhao10.tml 
+	COMMAND cp -f libzhao10${CMAKE_SHARED_LIBRARY_SUFFIX} ../zhao10.tml 
+#	COMMAND rm -f libzhao10${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

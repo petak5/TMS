@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( yee03 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET yee03 POST_BUILD 
-	COMMAND cp -f libyee03.so ../TMOCmd/yee03.tml
-	COMMAND cp -f libyee03.so ../TMOgui/yee03.tml 
-	COMMAND cp -f libyee03.so ../yee03.tml 
-#	COMMAND rm -f libyee03.so 
+	COMMAND cp -f libyee03${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/yee03.tml
+	COMMAND cp -f libyee03${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/yee03.tml 
+	COMMAND cp -f libyee03${CMAKE_SHARED_LIBRARY_SUFFIX} ../yee03.tml 
+#	COMMAND rm -f libyee03${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

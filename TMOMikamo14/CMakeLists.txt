@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( mikamo14 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET mikamo14 POST_BUILD 
-	COMMAND cp -f libmikamo14.so ../TMOCmd/mikamo14.tml
-	COMMAND cp -f libmikamo14.so ../TMOgui/mikamo14.tml 
-	COMMAND cp -f libmikamo14.so ../mikamo14.tml 
-#	COMMAND rm -f libmikamo14.so 
+	COMMAND cp -f libmikamo14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/mikamo14.tml
+	COMMAND cp -f libmikamo14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/mikamo14.tml 
+	COMMAND cp -f libmikamo14${CMAKE_SHARED_LIBRARY_SUFFIX} ../mikamo14.tml 
+#	COMMAND rm -f libmikamo14${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

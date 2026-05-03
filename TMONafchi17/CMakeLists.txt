@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( nafchi17 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET nafchi17 POST_BUILD 
-	COMMAND cp -f libnafchi17.so ../TMOCmd/nafchi17.tml
-	COMMAND cp -f libnafchi17.so ../TMOgui/nafchi17.tml 
-	COMMAND cp -f libnafchi17.so ../nafchi17.tml 
-#	COMMAND rm -f libnafchi17.so 
+	COMMAND cp -f libnafchi17${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/nafchi17.tml
+	COMMAND cp -f libnafchi17${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/nafchi17.tml 
+	COMMAND cp -f libnafchi17${CMAKE_SHARED_LIBRARY_SUFFIX} ../nafchi17.tml 
+#	COMMAND rm -f libnafchi17${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

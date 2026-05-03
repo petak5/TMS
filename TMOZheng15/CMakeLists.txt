@@ -40,10 +40,10 @@ SET(TMOEFFICIENT_HEADERS
 
 add_library( Zheng15 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Zheng15 POST_BUILD 
-	COMMAND cp -f libZheng15.so ../TMOCmd/Zheng15.tml
-	COMMAND cp -f libZheng15.so ../TMOgui/Zheng15.tml 
-	COMMAND cp -f libZheng15.so ../Zheng15.tml 
-#	COMMAND rm -f libZheng15.so 
+	COMMAND cp -f libZheng15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Zheng15.tml
+	COMMAND cp -f libZheng15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Zheng15.tml 
+	COMMAND cp -f libZheng15${CMAKE_SHARED_LIBRARY_SUFFIX} ../Zheng15.tml 
+#	COMMAND rm -f libZheng15${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

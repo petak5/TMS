@@ -44,8 +44,8 @@ INCLUDE_DIRECTORIES ( ${EIGEN_INCLUDE_DIR} )
 
 add_library( Xiong17 SHARED ${TMOXIONG_SOURCES} )
 add_custom_command( TARGET Xiong17 POST_BUILD 
-	COMMAND cp -f libXiong17.so ../TMOCmd/Xiong17.tml
-	COMMAND cp -f libXiong17.so ../TMOgui/Xiong17.tml 
-	COMMAND cp -f libXiong17.so ../Xiong17.tml 
-#	COMMAND rm -f libXiong17.so 
+	COMMAND cp -f libXiong17${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Xiong17.tml
+	COMMAND cp -f libXiong17${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Xiong17.tml 
+	COMMAND cp -f libXiong17${CMAKE_SHARED_LIBRARY_SUFFIX} ../Xiong17.tml 
+#	COMMAND rm -f libXiong17${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)

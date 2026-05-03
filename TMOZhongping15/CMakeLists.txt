@@ -40,10 +40,10 @@ SET(TMOZHONGPING_HEADERS
 
 add_library( Zhongping15 SHARED ${TMOZHONGPING_SOURCES} )
 add_custom_command( TARGET Zhongping15 POST_BUILD 
-	COMMAND cp -f libZhongping15.so ../TMOCmd/Zhongping15.tml
-	COMMAND cp -f libZhongping15.so ../TMOgui/Zhongping15.tml 
-	COMMAND cp -f libZhongping15.so ../Zhongping15.tml 
-#	COMMAND rm -f libZhongping15.so 
+	COMMAND cp -f libZhongping15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Zhongping15.tml
+	COMMAND cp -f libZhongping15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Zhongping15.tml 
+	COMMAND cp -f libZhongping15${CMAKE_SHARED_LIBRARY_SUFFIX} ../Zhongping15.tml 
+#	COMMAND rm -f libZhongping15${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

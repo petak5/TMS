@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Song10 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Song10 POST_BUILD 
-	COMMAND cp -f libSong10.so ../TMOCmd/TMOSong10.tml
-	COMMAND cp -f libSong10.so ../TMOgui/TMOSong10.tml 
-	COMMAND cp -f libSong10.so ../TMOSong10.tml 
-#	COMMAND rm -f libSong10.so 
+	COMMAND cp -f libSong10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/TMOSong10.tml
+	COMMAND cp -f libSong10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/TMOSong10.tml 
+	COMMAND cp -f libSong10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOSong10.tml 
+#	COMMAND rm -f libSong10${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

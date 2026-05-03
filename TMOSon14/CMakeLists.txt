@@ -65,8 +65,8 @@ SET(TMOWARD_HEADERS
 
 add_library( Son14 SHARED ${TMO_SOURCES} )
  add_custom_command( TARGET Son14 POST_BUILD
- 	COMMAND cp -f libSon14.so ../TMOCmd/Son14.tml
- 	COMMAND cp -f libSon14.so ../TMOgui/Son14.tml
- 	COMMAND cp -f libSon14.so ../Son14.tml
- #	COMMAND rm -f libSon14.so
+ 	COMMAND cp -f libSon14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Son14.tml
+ 	COMMAND cp -f libSon14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Son14.tml
+ 	COMMAND cp -f libSon14${CMAKE_SHARED_LIBRARY_SUFFIX} ../Son14.tml
+ #	COMMAND rm -f libSon14${CMAKE_SHARED_LIBRARY_SUFFIX}
   	)

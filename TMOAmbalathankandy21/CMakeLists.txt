@@ -30,8 +30,8 @@ SET(HEADERS
 
 add_library( Ambalathankandy21 SHARED ${SOURCES} ${HEADERS})
 add_custom_command( TARGET Ambalathankandy21 POST_BUILD 
-	COMMAND cp -f libAmbalathankandy21.so ../TMOCmd/Ambalathankandy21.tml
-	COMMAND cp -f libAmbalathankandy21.so ../TMOgui/Ambalathankandy21.tml 
-	COMMAND cp -f libAmbalathankandy21.so ../Ambalathankandy21.tml 
-#	COMMAND rm -f libqueiroz06.so 
+	COMMAND cp -f libAmbalathankandy21${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Ambalathankandy21.tml
+	COMMAND cp -f libAmbalathankandy21${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Ambalathankandy21.tml 
+	COMMAND cp -f libAmbalathankandy21${CMAKE_SHARED_LIBRARY_SUFFIX} ../Ambalathankandy21.tml 
+#	COMMAND rm -f libqueiroz06${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)

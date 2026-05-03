@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( tai08 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET tai08 POST_BUILD 
-	COMMAND cp -f libtai08.so ../TMOCmd/tai08.tml
-	COMMAND cp -f libtai08.so ../TMOgui/tai08.tml 
-	COMMAND cp -f libtai08.so ../tai08.tml 
-#	COMMAND rm -f libtai08.so 
+	COMMAND cp -f libtai08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/tai08.tml
+	COMMAND cp -f libtai08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/tai08.tml 
+	COMMAND cp -f libtai08${CMAKE_SHARED_LIBRARY_SUFFIX} ../tai08.tml 
+#	COMMAND rm -f libtai08${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

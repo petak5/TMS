@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( meylan06 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET meylan06 POST_BUILD 
-	COMMAND cp -f libmeylan06.so ../TMOCmd/meylan06.tml
-	COMMAND cp -f libmeylan06.so ../TMOgui/meylan06.tml 
-	COMMAND cp -f libmeylan06.so ../meylan06.tml 
-#	COMMAND rm -f libmeylan06.so 
+	COMMAND cp -f libmeylan06${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/meylan06.tml
+	COMMAND cp -f libmeylan06${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/meylan06.tml 
+	COMMAND cp -f libmeylan06${CMAKE_SHARED_LIBRARY_SUFFIX} ../meylan06.tml 
+#	COMMAND rm -f libmeylan06${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

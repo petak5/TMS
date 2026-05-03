@@ -45,10 +45,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Hu14 SHARED ${TMO_SOURCES} )
  add_custom_command( TARGET Hu14 POST_BUILD 
- 	COMMAND cp -f libHu14.so ../TMOCmd/Hu14.tml
- 	COMMAND cp -f libHu14.so ../TMOgui/Hu14.tml 
- 	COMMAND cp -f libHu14.so ../Hu14.tml 
- #	COMMAND rm -f libHu14.so 
+ 	COMMAND cp -f libHu14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Hu14.tml
+ 	COMMAND cp -f libHu14${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Hu14.tml 
+ 	COMMAND cp -f libHu14${CMAKE_SHARED_LIBRARY_SUFFIX} ../Hu14.tml 
+ #	COMMAND rm -f libHu14${CMAKE_SHARED_LIBRARY_SUFFIX} 
   	)
 
 

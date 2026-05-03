@@ -70,10 +70,10 @@ SET(TMOWARD_HEADERS
 add_library( Tao17 SHARED ${TMO_SOURCES} )
 
  add_custom_command( TARGET Tao17 POST_BUILD 
- 	COMMAND cp -f libTao17.so ../TMOCmd/Tao17.tml
- 	COMMAND cp -f libTao17.so ../TMOgui/Tao17.tml 
- 	COMMAND cp -f libTao17.so ../Tao17.tml 
- #	COMMAND rm -f libHu14.so 
+ 	COMMAND cp -f libTao17${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Tao17.tml
+ 	COMMAND cp -f libTao17${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Tao17.tml 
+ 	COMMAND cp -f libTao17${CMAKE_SHARED_LIBRARY_SUFFIX} ../Tao17.tml 
+ #	COMMAND rm -f libHu14${CMAKE_SHARED_LIBRARY_SUFFIX} 
   	)
 
 

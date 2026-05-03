@@ -42,10 +42,10 @@ SET(TMOWARD_HEADERS
 
 add_library( gastal11 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET gastal11 POST_BUILD 
-	COMMAND cp -f libgastal11.so ../TMOCmd/gastal11.tml
-	COMMAND cp -f libgastal11.so ../TMOgui/gastal11.tml 
-	COMMAND cp -f libgastal11.so ../gastal11.tml 
-#	COMMAND rm -f libgastal11.so 
+	COMMAND cp -f libgastal11${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/gastal11.tml
+	COMMAND cp -f libgastal11${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/gastal11.tml 
+	COMMAND cp -f libgastal11${CMAKE_SHARED_LIBRARY_SUFFIX} ../gastal11.tml 
+#	COMMAND rm -f libgastal11${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

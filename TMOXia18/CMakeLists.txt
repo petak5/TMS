@@ -69,9 +69,9 @@ SET(TMOWARD_HEADERS
 
 add_library( xia18 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET xia18 POST_BUILD 
-	COMMAND cp -f libxia18.so ../TMOCmd/xia18.tml
-	COMMAND cp -f libxia18.so ../TMOgui/xia18.tml 
-	COMMAND cp -f libxia18.so ../xia18.tml 
-#	COMMAND rm -f libxia18.so
+	COMMAND cp -f libxia18${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/xia18.tml
+	COMMAND cp -f libxia18${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/xia18.tml 
+	COMMAND cp -f libxia18${CMAKE_SHARED_LIBRARY_SUFFIX} ../xia18.tml 
+#	COMMAND rm -f libxia18${CMAKE_SHARED_LIBRARY_SUFFIX}
 	)
 

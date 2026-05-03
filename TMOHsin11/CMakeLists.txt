@@ -33,10 +33,10 @@ SET(TMOWARD_HEADERS
 
 add_library( hsin11 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET hsin11 POST_BUILD 
-	COMMAND cp -f libhsin11.so ../TMOCmd/hsin11.tml
-	COMMAND cp -f libhsin11.so ../TMOgui/hsin11.tml 
-	COMMAND cp -f libhsin11.so ../hsin11.tml 
-#	COMMAND rm -f libhsin11.so 
+	COMMAND cp -f libhsin11${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/hsin11.tml
+	COMMAND cp -f libhsin11${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/hsin11.tml 
+	COMMAND cp -f libhsin11${CMAKE_SHARED_LIBRARY_SUFFIX} ../hsin11.tml 
+#	COMMAND rm -f libhsin11${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

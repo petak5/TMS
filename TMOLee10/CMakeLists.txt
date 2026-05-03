@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Lee10 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Lee10 POST_BUILD 
-	COMMAND cp -f libLee10.so ../TMOCmd/Lee10.tml
-	COMMAND cp -f libLee10.so ../TMOgui/Lee10.tml 
-	COMMAND cp -f libLee10.so ../Lee10.tml 
-#	COMMAND rm -f libLee10.so 
+	COMMAND cp -f libLee10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Lee10.tml
+	COMMAND cp -f libLee10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Lee10.tml 
+	COMMAND cp -f libLee10${CMAKE_SHARED_LIBRARY_SUFFIX} ../Lee10.tml 
+#	COMMAND rm -f libLee10${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

@@ -38,10 +38,10 @@ SET(TMOWARD_HEADERS
 
 add_library( paris11 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET paris11 POST_BUILD 
-	COMMAND cp -f libparis11.so ../TMOCmd/paris11.tml
-	COMMAND cp -f libparis11.so ../TMOgui/paris11.tml 
-	COMMAND cp -f libparis11.so ../paris11.tml 
-#	COMMAND rm -f libparis11.so 
+	COMMAND cp -f libparis11${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/paris11.tml
+	COMMAND cp -f libparis11${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/paris11.tml 
+	COMMAND cp -f libparis11${CMAKE_SHARED_LIBRARY_SUFFIX} ../paris11.tml 
+#	COMMAND rm -f libparis11${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

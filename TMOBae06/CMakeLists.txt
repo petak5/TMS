@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Bae06 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Bae06 POST_BUILD 
-	COMMAND cp -f libBae06.so ../TMOCmd/Bae06.tml
-	COMMAND cp -f libBae06.so ../TMOgui/Bae06.tml 
-	COMMAND cp -f libBae06.so ../Bae06.tml 
-#	COMMAND rm -f libBae06.so 
+	COMMAND cp -f libBae06${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Bae06.tml
+	COMMAND cp -f libBae06${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Bae06.tml 
+	COMMAND cp -f libBae06${CMAKE_SHARED_LIBRARY_SUFFIX} ../Bae06.tml 
+#	COMMAND rm -f libBae06${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

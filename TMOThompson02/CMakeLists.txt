@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Thompson02 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Thompson02 POST_BUILD 
-	COMMAND cp -f libThompson02.so ../TMOCmd/Thompson02.tml
-	COMMAND cp -f libThompson02.so ../TMOgui/Thompson02.tml 
-	COMMAND cp -f libThompson02.so ../Thompson02.tml 
-#	COMMAND rm -f libThompson02.so 
+	COMMAND cp -f libThompson02${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Thompson02.tml
+	COMMAND cp -f libThompson02${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Thompson02.tml 
+	COMMAND cp -f libThompson02${CMAKE_SHARED_LIBRARY_SUFFIX} ../Thompson02.tml 
+#	COMMAND rm -f libThompson02${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

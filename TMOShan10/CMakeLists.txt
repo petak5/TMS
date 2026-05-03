@@ -50,10 +50,10 @@ SET(TMOWARD_HEADERS
 
 add_library( shan10 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET shan10 POST_BUILD 
-	COMMAND cp -f libshan10.so ../TMOCmd/shan10.tml
-	COMMAND cp -f libshan10.so ../TMOgui/shan10.tml 
-	COMMAND cp -f libshan10.so ../shan10.tml 
-#	COMMAND rm -f libshan10.so 
+	COMMAND cp -f libshan10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/shan10.tml
+	COMMAND cp -f libshan10${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/shan10.tml 
+	COMMAND cp -f libshan10${CMAKE_SHARED_LIBRARY_SUFFIX} ../shan10.tml 
+#	COMMAND rm -f libshan10${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

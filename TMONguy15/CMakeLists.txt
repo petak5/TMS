@@ -45,10 +45,10 @@ SET(TMOWARD_HEADERS
 
 add_library( nguy15 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET nguy15 POST_BUILD 
-	COMMAND cp -f libnguy15.so ../TMOCmd/nguy15.tml
-	COMMAND cp -f libnguy15.so ../TMOgui/nguy15.tml 
-	COMMAND cp -f libnguy15.so ../nguy15.tml 
-#	COMMAND rm -f libnguy15.so 
+	COMMAND cp -f libnguy15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/nguy15.tml
+	COMMAND cp -f libnguy15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/nguy15.tml 
+	COMMAND cp -f libnguy15${CMAKE_SHARED_LIBRARY_SUFFIX} ../nguy15.tml 
+#	COMMAND rm -f libnguy15${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

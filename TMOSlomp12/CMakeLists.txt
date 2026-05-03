@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( slomp12 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET slomp12 POST_BUILD 
-	COMMAND cp -f libslomp12.so ../TMOCmd/slomp12.tml
-	COMMAND cp -f libslomp12.so ../TMOgui/slomp12.tml 
-	COMMAND cp -f libslomp12.so ../slomp12.tml 
-#	COMMAND rm -f libslomp12.so 
+	COMMAND cp -f libslomp12${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/slomp12.tml
+	COMMAND cp -f libslomp12${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/slomp12.tml 
+	COMMAND cp -f libslomp12${CMAKE_SHARED_LIBRARY_SUFFIX} ../slomp12.tml 
+#	COMMAND rm -f libslomp12${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

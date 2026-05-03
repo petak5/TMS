@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( drago03 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET drago03 POST_BUILD 
-	COMMAND cp -f libdrago03.so ../TMOCmd/drago03.tml
-	COMMAND cp -f libdrago03.so ../TMOgui/drago03.tml 
-	COMMAND cp -f libdrago03.so ../drago03.tml 
-#	COMMAND rm -f libdrago03.so 
+	COMMAND cp -f libdrago03${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/drago03.tml
+	COMMAND cp -f libdrago03${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/drago03.tml 
+	COMMAND cp -f libdrago03${CMAKE_SHARED_LIBRARY_SUFFIX} ../drago03.tml 
+#	COMMAND rm -f libdrago03${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

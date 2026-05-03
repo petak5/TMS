@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Kim09 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Kim09 POST_BUILD 
-	COMMAND cp -f libKim09.so ../TMOCmd/Kim09.tml
-	COMMAND cp -f libKim09.so ../TMOgui/Kim09.tml 
-	COMMAND cp -f libKim09.so ../Kim09.tml 
-#	COMMAND rm -f libKim09.so 
+	COMMAND cp -f libKim09${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Kim09.tml
+	COMMAND cp -f libKim09${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Kim09.tml 
+	COMMAND cp -f libKim09${CMAKE_SHARED_LIBRARY_SUFFIX} ../Kim09.tml 
+#	COMMAND rm -f libKim09${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

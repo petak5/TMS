@@ -39,6 +39,7 @@ ADD_EXECUTABLE(${EXE_NAME}
 )
 
 add_custom_command( TARGET ${EXE_NAME} POST_BUILD
-        COMMAND cp -r tmocmd ../
+        # COMMAND cp -r tmocmd ../
+        COMMAND true
         )
 

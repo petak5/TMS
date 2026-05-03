@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( tao18 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET tao18 POST_BUILD 
-	COMMAND cp -f libtao18.so ../TMOCmd/tao18.tml
-	COMMAND cp -f libtao18.so ../TMOgui/tao18.tml 
-	COMMAND cp -f libtao18.so ../tao18.tml 
-#	COMMAND rm -f libtao18.so 
+	COMMAND cp -f libtao18${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/tao18.tml
+	COMMAND cp -f libtao18${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/tao18.tml 
+	COMMAND cp -f libtao18${CMAKE_SHARED_LIBRARY_SUFFIX} ../tao18.tml 
+#	COMMAND rm -f libtao18${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

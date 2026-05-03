@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( biswas05 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET biswas05 POST_BUILD 
-	COMMAND cp -f libbiswas05.so ../TMOCmd/biswas05.tml
-	COMMAND cp -f libbiswas05.so ../TMOgui/biswas05.tml 
-	COMMAND cp -f libbiswas05.so ../biswas05.tml 
-#	COMMAND rm -f libiswas05.so 
+	COMMAND cp -f libbiswas05${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/biswas05.tml
+	COMMAND cp -f libbiswas05${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/biswas05.tml 
+	COMMAND cp -f libbiswas05${CMAKE_SHARED_LIBRARY_SUFFIX} ../biswas05.tml 
+#	COMMAND rm -f libiswas05${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

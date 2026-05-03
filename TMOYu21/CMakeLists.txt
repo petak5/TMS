@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Yu21 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Yu21 POST_BUILD 
-	COMMAND cp -f libYu21.so ../TMOCmd/Yu21.tml
-	COMMAND cp -f libYu21.so ../TMOgui/Yu21.tml 
-	COMMAND cp -f libYu21.so ../Yu21.tml 
-#	COMMAND rm -f libyourOperator.so 
+	COMMAND cp -f libYu21${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Yu21.tml
+	COMMAND cp -f libYu21${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Yu21.tml 
+	COMMAND cp -f libYu21${CMAKE_SHARED_LIBRARY_SUFFIX} ../Yu21.tml 
+#	COMMAND rm -f libyourOperator${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

@@ -38,10 +38,10 @@ SET(TMOWARD_HEADERS
 
 add_library( mantiuk08 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET mantiuk08 POST_BUILD 
-	COMMAND cp -f libmantiuk08.so ../TMOCmd/mantiuk08.tml
-	COMMAND cp -f libmantiuk08.so ../TMOgui/mantiuk08.tml 
-	COMMAND cp -f libmantiuk08.so ../mantiuk08.tml 
-#	COMMAND rm -f libmantiuk08.so 
+	COMMAND cp -f libmantiuk08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/mantiuk08.tml
+	COMMAND cp -f libmantiuk08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/mantiuk08.tml 
+	COMMAND cp -f libmantiuk08${CMAKE_SHARED_LIBRARY_SUFFIX} ../mantiuk08.tml 
+#	COMMAND rm -f libmantiuk08${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

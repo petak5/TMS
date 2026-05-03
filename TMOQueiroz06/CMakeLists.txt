@@ -43,10 +43,10 @@ SET(TMOWARD_HEADERS
 
 add_library( queiroz06 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET queiroz06 POST_BUILD 
-	COMMAND cp -f libqueiroz06.so ../TMOCmd/queiroz06.tml
-	COMMAND cp -f libqueiroz06.so ../TMOgui/queiroz06.tml 
-	COMMAND cp -f libqueiroz06.so ../queiroz06.tml 
-#	COMMAND rm -f libqueiroz06.so 
+	COMMAND cp -f libqueiroz06${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/queiroz06.tml
+	COMMAND cp -f libqueiroz06${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/queiroz06.tml 
+	COMMAND cp -f libqueiroz06${CMAKE_SHARED_LIBRARY_SUFFIX} ../queiroz06.tml 
+#	COMMAND rm -f libqueiroz06${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

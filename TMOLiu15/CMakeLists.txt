@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( liu15 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET liu15 POST_BUILD 
-	COMMAND cp -f libliu15.so ../TMOCmd/liu15.tml
-	COMMAND cp -f libliu15.so ../TMOgui/liu15.tml 
-	COMMAND cp -f libliu15.so ../liu15.tml 
-#	COMMAND rm -f libliu15.so 
+	COMMAND cp -f libliu15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/liu15.tml
+	COMMAND cp -f libliu15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/liu15.tml 
+	COMMAND cp -f libliu15${CMAKE_SHARED_LIBRARY_SUFFIX} ../liu15.tml 
+#	COMMAND rm -f libliu15${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

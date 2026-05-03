@@ -52,8 +52,8 @@ SET(TMOWARD_HEADERS
 
 add_library( kou15 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET kou15 POST_BUILD 
-	COMMAND cp -f libkou15.so ../TMOCmd/kou15.tml
-	COMMAND cp -f libkou15.so ../TMOgui/kou15.tml 
-	COMMAND cp -f libkou15.so ../kou15.tml 
-#	COMMAND rm -f libkou15.so 
+	COMMAND cp -f libkou15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/kou15.tml
+	COMMAND cp -f libkou15${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/kou15.tml 
+	COMMAND cp -f libkou15${CMAKE_SHARED_LIBRARY_SUFFIX} ../kou15.tml 
+#	COMMAND rm -f libkou15${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)

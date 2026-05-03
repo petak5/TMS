@@ -30,10 +30,10 @@ SET(TMOWARD_HEADERS
 
 add_library( wu24 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET wu24 POST_BUILD 
-	COMMAND cp -f libwu24.so ../TMOCmd/wu24.tml
-	COMMAND cp -f libwu24.so ../TMOgui/wu24.tml 
-	COMMAND cp -f libwu24.so ../wu24.tml 
-#	COMMAND rm -f libwu24.so 
+	COMMAND cp -f libwu24${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/wu24.tml
+	COMMAND cp -f libwu24${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/wu24.tml 
+	COMMAND cp -f libwu24${CMAKE_SHARED_LIBRARY_SUFFIX} ../wu24.tml 
+#	COMMAND rm -f libwu24${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

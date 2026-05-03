@@ -41,10 +41,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Kuhn08 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Kuhn08 POST_BUILD 
-	COMMAND cp -f libKuhn08.so ../TMOCmd/Kuhn08.tml
-	COMMAND cp -f libKuhn08.so ../TMOgui/Kuhn08.tml 
-	COMMAND cp -f libKuhn08.so ../Kuhn08.tml 
-#	COMMAND rm -f libKuhn08.so 
+	COMMAND cp -f libKuhn08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Kuhn08.tml
+	COMMAND cp -f libKuhn08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Kuhn08.tml 
+	COMMAND cp -f libKuhn08${CMAKE_SHARED_LIBRARY_SUFFIX} ../Kuhn08.tml 
+#	COMMAND rm -f libKuhn08${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

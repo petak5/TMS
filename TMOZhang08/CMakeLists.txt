@@ -35,10 +35,10 @@ SET(TMOWARD_HEADERS
 
 add_library( Zhang08 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Zhang08 POST_BUILD 
-	COMMAND cp -f libZhang08.so ../TMOCmd/Zhang08.tml
-	COMMAND cp -f libZhang08.so ../TMOgui/Zhang08.tml 
-	COMMAND cp -f libZhang08.so ../Zhang08.tml 
-#	COMMAND rm -f libZhang08.so 
+	COMMAND cp -f libZhang08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Zhang08.tml
+	COMMAND cp -f libZhang08${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Zhang08.tml 
+	COMMAND cp -f libZhang08${CMAKE_SHARED_LIBRARY_SUFFIX} ../Zhang08.tml 
+#	COMMAND rm -f libZhang08${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 

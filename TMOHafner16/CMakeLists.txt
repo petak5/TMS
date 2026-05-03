@@ -30,10 +30,10 @@ TMOHafner16.h
 
 add_library(Hafner16 SHARED ${TMO_SOURCES} )
 add_custom_command( TARGET Hafner16 POST_BUILD 
-	COMMAND cp -f libHafner16.so ../TMOCmd/Hafner16.tml
-	COMMAND cp -f libHafner16.so ../TMOgui/Hafner16.tml 
-	COMMAND cp -f libHafner16.so ../Hafner16.tml 
-#	COMMAND rm -f libyourOperator.so 
+	COMMAND cp -f libHafner16${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOCmd/Hafner16.tml
+	COMMAND cp -f libHafner16${CMAKE_SHARED_LIBRARY_SUFFIX} ../TMOgui/Hafner16.tml 
+	COMMAND cp -f libHafner16${CMAKE_SHARED_LIBRARY_SUFFIX} ../Hafner16.tml 
+#	COMMAND rm -f libyourOperator${CMAKE_SHARED_LIBRARY_SUFFIX} 
 	)
 
 
