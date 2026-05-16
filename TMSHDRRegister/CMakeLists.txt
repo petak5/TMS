@@ -20,25 +20,30 @@ pthread
 ${CMAKE_DL_LIBS}
 )
 
-SET(TMSCREATEHDR_SOURCES
- TMSCreateHDR.cpp
+SET(TMSHDRREGISTER_SOURCES
+ TMSHDRRegister.cpp
+ TMSHDRAlignHomography.cpp
+ TMSHDRAlignOpticalFlow.cpp
+ TMSHDRAlignMTB.cpp
  main.cpp
 )
 
 
-SET(TMSCREATEHDR_HEADERS
- TMSCreateHDR.h
+SET(TMSHDRREGISTER_HEADERS
+ TMSHDRRegister.h
+ TMSHDRAlignHomography.h
+ TMSHDRAlignOpticalFlow.h
+ TMSHDRAlignMTB.h
 )
 
 
 
 
-SET(EXE_NAME "tmscreatehdr${TAG_VERSION}" )
+SET(EXE_NAME "tmshdrregister${TAG_VERSION}" )
 ADD_EXECUTABLE(${EXE_NAME}
-  ${TMSCREATEHDR_SOURCES}
+  ${TMSHDRREGISTER_SOURCES}
 )
 
 add_custom_command( TARGET ${EXE_NAME} POST_BUILD
-        COMMAND cp -r tmscreatehdr ../
+        COMMAND true
         )
-

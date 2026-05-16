@@ -1,20 +1,20 @@
-// TMSAlignMTBMethod.cpp: implementation of the TMSAlignMTBMethod class.
+// TMSHDRAlignMTB.cpp: implementation of the TMSHDRAlignMTB class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "TMSAlignMTBMethod.h"
+#include "TMSHDRAlignMTB.h"
 #include <algorithm>
 #include <opencv2/optflow.hpp>
 
-TMSAlignMTBMethod::TMSAlignMTBMethod()
+TMSHDRAlignMTB::TMSHDRAlignMTB()
 {
 }
 
-TMSAlignMTBMethod::~TMSAlignMTBMethod()
+TMSHDRAlignMTB::~TMSHDRAlignMTB()
 {
 }
 
-std::vector<cv::Mat> TMSAlignMTBMethod::align(std::vector<cv::Mat> images, std::string debugOutput, bool isDebug)
+std::vector<cv::Mat> TMSHDRAlignMTB::align(std::vector<cv::Mat> images, std::string debugOutput, bool isDebug)
 {
     int numImages = images.size();
     std::vector<cv::Mat> alignedImages;

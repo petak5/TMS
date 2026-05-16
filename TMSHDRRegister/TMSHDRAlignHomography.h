@@ -1,15 +1,15 @@
-// TMSAlignOpticalFlowMethod.h: interface for the TMSAlignOpticalFlowMethod class.
+// TMSHDRAlignHomography.h: interface for the TMSHDRAlignHomography class.
 //
 //////////////////////////////////////////////////////////////////////
 
 #include <opencv2/opencv.hpp>
 
-class TMSAlignOpticalFlowMethod
+class TMSHDRAlignHomography
 {
 public:
     virtual std::vector<cv::Mat> align(std::vector<cv::Mat> images, int resizeRatio, std::string debugOutputs, bool isDebug);
-    TMSAlignOpticalFlowMethod();
-    virtual ~TMSAlignOpticalFlowMethod();
+    TMSHDRAlignHomography();
+    virtual ~TMSHDRAlignHomography();
 
 protected:
     cv::Mat align_image(const cv::Mat &image, const cv::Mat &homography);

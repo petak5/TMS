@@ -1,19 +1,19 @@
-// TMSAlignHomographyMethod.cpp: implementation of the TMSAlignHomographyMethod class.
+// TMSHDRAlignHomography.cpp: implementation of the TMSHDRAlignHomography class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "TMSAlignHomographyMethod.h"
+#include "TMSHDRAlignHomography.h"
 #include <algorithm>
 
-TMSAlignHomographyMethod::TMSAlignHomographyMethod()
+TMSHDRAlignHomography::TMSHDRAlignHomography()
 {
 }
 
-TMSAlignHomographyMethod::~TMSAlignHomographyMethod()
+TMSHDRAlignHomography::~TMSHDRAlignHomography()
 {
 }
 
-std::vector<cv::Mat> TMSAlignHomographyMethod::align(std::vector<cv::Mat> images, int resizeRatio, std::string debugOutput, bool isDebug)
+std::vector<cv::Mat> TMSHDRAlignHomography::align(std::vector<cv::Mat> images, int resizeRatio, std::string debugOutput, bool isDebug)
 {
     int numImages = images.size();
     std::vector<cv::Mat> alignedImages;
@@ -159,14 +159,16 @@ std::vector<cv::Mat> TMSAlignHomographyMethod::align(std::vector<cv::Mat> images
     return alignedImages;
 }
 
-cv::Mat TMSAlignHomographyMethod::align_image(const cv::Mat &image, const cv::Mat &homography)
+cv::Mat TMSHDRAlignHomography::align_image(const cv::Mat &image, const cv::Mat &homography)
 {
     cv::Mat aligned;
-    cv::warpPerspective(image, aligned, homography, cv::Size(image.cols, image.rows));
+    // BORDER_REPLICATE prevents dark fringe: bilinear interpolation near the edge
+    // blends with replicated edge pixels instead of black.
+    cv::warpPerspective(image, aligned, homography, cv::Size(image.cols, image.rows), cv::INTER_LINEAR, cv::BORDER_REPLICATE);
     return aligned;
 }
 
-std::pair<cv::Mat, cv::Mat> TMSAlignHomographyMethod::align_and_resize_images(const cv::Mat &image_s, const cv::Mat &image_t, const cv::Mat &homography)
+std::pair<cv::Mat, cv::Mat> TMSHDRAlignHomography::align_and_resize_images(const cv::Mat &image_s, const cv::Mat &image_t, const cv::Mat &homography)
 {
     // Get the dimensions of the source image
     float h = image_s.rows;
@@ -216,7 +218,7 @@ std::pair<cv::Mat, cv::Mat> TMSAlignHomographyMethod::align_and_resize_images(co
     return std::make_pair(aligned_image, extended_t);
 }
 
-cv::Mat TMSAlignHomographyMethod::crop_image(const cv::Mat &image, const cv::Mat &homography)
+cv::Mat TMSHDRAlignHomography::crop_image(const cv::Mat &image, const cv::Mat &homography)
 {
     // Get the dimensions of the image
     float h = image.rows;
@@ -235,12 +237,9 @@ cv::Mat TMSAlignHomographyMethod::crop_image(const cv::Mat &image, const cv::Mat
     float top_y = std::ceil(std::max(std::max(0.f, points_transformed[0].y), points_transformed[2].y));
     float bottom_y = std::floor(std::min(std::min(h, points_transformed[1].y), points_transformed[3].y));
 
-    // Calculate how much to crop from the right and bottom
-    int from_right = w - right_x;
-    int from_bottom = h - bottom_y;
-
-    // Crop the image using the calculated bounding box
-    cv::Rect crop_region(left_x, top_y, right_x - left_x, bottom_y - top_y);
+    // 1-pixel inward margin avoids the interpolation boundary for non-axis-aligned homographies
+    const int margin = 1;
+    cv::Rect crop_region(left_x + margin, top_y + margin, right_x - left_x - 2 * margin, bottom_y - top_y - 2 * margin);
     cv::Mat cropped_image = image(crop_region);
 
     return cropped_image;

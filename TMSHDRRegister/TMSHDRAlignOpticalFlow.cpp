@@ -1,20 +1,20 @@
-// TMSAlignOpticalFlowMethod.cpp: implementation of the TMSAlignOpticalFlowMethod class.
+// TMSHDRAlignOpticalFlow.cpp: implementation of the TMSHDRAlignOpticalFlow class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "TMSAlignOpticalFlowMethod.h"
+#include "TMSHDRAlignOpticalFlow.h"
 #include <algorithm>
 #include <opencv2/optflow.hpp>
 
-TMSAlignOpticalFlowMethod::TMSAlignOpticalFlowMethod()
+TMSHDRAlignOpticalFlow::TMSHDRAlignOpticalFlow()
 {
 }
 
-TMSAlignOpticalFlowMethod::~TMSAlignOpticalFlowMethod()
+TMSHDRAlignOpticalFlow::~TMSHDRAlignOpticalFlow()
 {
 }
 
-std::vector<cv::Mat> TMSAlignOpticalFlowMethod::align(std::vector<cv::Mat> images, int resizeRatio, std::string debugOutput, bool isDebug)
+std::vector<cv::Mat> TMSHDRAlignOpticalFlow::align(std::vector<cv::Mat> images, int resizeRatio, std::string debugOutput, bool isDebug)
 {
     int numImages = images.size();
     std::vector<cv::Mat> alignedImages;

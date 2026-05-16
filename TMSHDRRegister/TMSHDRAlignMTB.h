@@ -1,13 +1,13 @@
-// TMSAlignMTBMethod.h: interface for the TMSAlignMTBMethod class.
+// TMSHDRAlignMTB.h: interface for the TMSHDRAlignMTB class.
 //
 //////////////////////////////////////////////////////////////////////
 
 #include <opencv2/opencv.hpp>
 
-class TMSAlignMTBMethod
+class TMSHDRAlignMTB
 {
 public:
     virtual std::vector<cv::Mat> align(std::vector<cv::Mat> images, std::string debugOutput, bool isDebug);
-    TMSAlignMTBMethod();
-    virtual ~TMSAlignMTBMethod();
+    TMSHDRAlignMTB();
+    virtual ~TMSHDRAlignMTB();
 };
