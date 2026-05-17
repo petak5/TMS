@@ -50,7 +50,12 @@ int TMSHDRCreate::main(int argc, char *argv[])
     std::string outputFileName = "output";
     bool useHDRPlus = false;
     bool useDISMerge = false;
+    bool useSAFNet = false;
     float disNoise = 0.05f;
+    float hdrplusCTemporal = 2.0f;
+    std::string safnetModel = "SAFNet.onnx";
+    int safnetTile = 2048;
+    int safnetOverlap = 128;
     std::vector<std::string> imageFiles;
     std::vector<float> times;
 
@@ -69,10 +74,34 @@ int TMSHDRCreate::main(int argc, char *argv[])
         {
             useDISMerge = true;
         }
+        else if (strcmp(argv[i], "--safnet") == 0)
+        {
+            useSAFNet = true;
+        }
+        else if (strcmp(argv[i], "--safnet-model") == 0)
+        {
+            if (i + 1 >= argc) { Help(); return 1; }
+            safnetModel = argv[++i];
+        }
+        else if (strcmp(argv[i], "--safnet-tile") == 0)
+        {
+            if (i + 1 >= argc) { Help(); return 1; }
+            safnetTile = std::stoi(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--safnet-overlap") == 0)
+        {
+            if (i + 1 >= argc) { Help(); return 1; }
+            safnetOverlap = std::stoi(argv[++i]);
+        }
         else if (strcmp(argv[i], "--dis-noise") == 0)
         {
             if (i + 1 >= argc) { Help(); return 1; }
             disNoise = std::stof(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--hdrplus-c") == 0)
+        {
+            if (i + 1 >= argc) { Help(); return 1; }
+            hdrplusCTemporal = std::stof(argv[++i]);
         }
         else
         {
@@ -98,15 +127,22 @@ int TMSHDRCreate::main(int argc, char *argv[])
         Help();
         return 1;
     }
-    if (!useHDRPlus && !useDISMerge && imageFiles.size() != 2)
+    if (useSAFNet && imageFiles.size() != 3)
     {
-        std::cerr << "Debevec method supports creating HDR from only 2 images." << std::endl;
+        std::cerr << "SAFNet requires exactly 3 images" << std::endl;
+        return 1;
+    }
+    if (!useHDRPlus && !useDISMerge && !useSAFNet && imageFiles.size() != 2)
+    {
+        std::cerr << "Debevec method supports creating HDR from only 2 images" << std::endl;
         return 1;
     }
 
     // HDR+ and DIS flow merge methods use full bit depth normalized to linear float32 [0,1]
+    // SAFNet needs sRGB-encoded float [0,1] (it applies its own gamma decoding internally)
     // For now the basic Debevec HDR merge stays as is with raw 8-bit encoded values for camera response calibration
     bool needLinearFloat = useHDRPlus || useDISMerge;
+    bool needSrgbFloat = useSAFNet;
 
     std::vector<cv::Mat> images;
     for (const auto& f : imageFiles)
@@ -125,6 +161,17 @@ int TMSHDRCreate::main(int argc, char *argv[])
             img.convertTo(img, CV_32F, scale);
             img = srgbToLinear(img);
         }
+        else if (needSrgbFloat)
+        {
+            img = cv::imread(f, cv::IMREAD_UNCHANGED);
+            if (img.empty())
+            {
+                std::cerr << "Failed to read: " << f << std::endl;
+                return 1;
+            }
+            double scale = (img.depth() == CV_16U) ? 1.0 / 65535.0 : 1.0 / 255.0;
+            img.convertTo(img, CV_32F, scale);
+        }
         else
         {
             img = cv::imread(f);
@@ -138,9 +185,14 @@ int TMSHDRCreate::main(int argc, char *argv[])
     }
 
     cv::Mat hdr;
-    if (useHDRPlus)
+    if (useSAFNet)
     {
-        TMSHDRMergeHDRPlus hdrPlus;
+        TMSHDRMergeSAFNet safnet(safnetModel, safnetTile, safnetOverlap);
+        hdr = safnet.process(images, times);
+    }
+    else if (useHDRPlus)
+    {
+        TMSHDRMergeHDRPlus hdrPlus(0.001f, 0.005f, 32, 16, 64, 4, hdrplusCTemporal);
         hdr = hdrPlus.process(images, times);
     }
     else if (useDISMerge)
@@ -179,5 +231,12 @@ void TMSHDRCreate::Help()
               << "                            Exposure times are optional for both multi-image modes:\n"
               << "                              with times:    linear irradiance output (needs tone mapping)\n"
               << "                              without times: display-ready exposure fusion\n"
-              << "    --dis-noise <value>     Noise variance for DIS merge Wiener weight (default: 0.05)\n\n";
+              << "    --hdrplus-c <value>     HDR+ Wiener aggressiveness (default: 2.0). Higher = more\n"
+              << "                            denoising.\n"
+              << "    --dis-noise <value>     Noise variance for DIS merge Wiener weight (default: 0.05)\n"
+              << "    --safnet                SAFNet deep alignment + fusion.\n"
+              << "                            Requires exactly 3 images (under/mid/over exposure).\n"
+              << "    --safnet-model <path>   Path to SAFNet ONNX model (default: SAFNet.onnx)\n"
+              << "    --safnet-tile <px>      Tile size for large images (default: 2048)\n"
+              << "    --safnet-overlap <px>   Overlap between tiles in pixels (default: 128)\n\n";
 }

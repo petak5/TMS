@@ -4,6 +4,7 @@
 #include "../tmolib/TMO.h"
 #include "TMSHDRMergeDIS.h"
 #include "TMSHDRMergeHDRPlus.h"
+#include "TMSHDRMergeSAFNet.h"
 
 class TMSHDRCreate
 {
