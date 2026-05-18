@@ -1,5 +1,6 @@
 #include <qapplication.h>
 #include <qmessagebox.h>
+#include <QTimer>
 //#include <qassistantclient.h>
 #include <qdir.h>
 #include <qpushbutton.h>
@@ -39,6 +40,7 @@
 #include "TMOGUIInfoTool.h"
 #include "TMOGUITransformation.h"
 #include "TMOGUISaveDialog.h"
+#include "TMOGUIHDRCreate.h"
 #include "switch.h"
 #include <qmap.h>
 
@@ -168,8 +170,38 @@ void TMOGUIWindow::showAssistantErrors(const QString &err)
 
 void TMOGUIWindow::exitFile()
 {
-	closeallWindow();
-	qApp->quit();
+	confirmQuit();
+}
+
+void TMOGUIWindow::closeEvent(QCloseEvent* event)
+{
+	event->ignore();
+	confirmQuit();
+}
+
+void TMOGUIWindow::confirmQuit()
+{
+	QMessageBox box(QMessageBox::Question, "Quit",
+			"Are you sure you want to quit Tone Mapping Studio?",
+			QMessageBox::Yes | QMessageBox::No, this);
+	for (auto* btn : box.buttons())
+	{
+		if (auto* pb = qobject_cast<QPushButton *>(btn))
+		{
+			pb->setDefault(false);
+			pb->setAutoDefault(false);
+		}
+	}
+	QTimer::singleShot(0, &box, [&box]() {
+		if (auto* buttonBox = box.findChild<QDialogButtonBox *>())
+			buttonBox->layout()->setSpacing(18);
+		box.setFocus();
+	});
+	if (box.exec() == QMessageBox::Yes)
+	{
+		SavePosition();
+		qApp->quit();
+	}
 }
 
 void TMOGUIWindow::openFile(QString fileName)
@@ -1897,4 +1929,11 @@ void TMOGUIWindow::refreshWindowsList()
 	pInfoTool->SetWindows(pWorkspace);
 	pFileTool->SetWindows(pWorkspace);
 	// FIXME if(pWorkspace->subWindowList().empty()) iTool->SetEnabled(false);
+}
+
+void TMOGUIWindow::createHDRCommand()
+{
+	TMOGUIHDRCreate dialog(this);
+	if (dialog.exec() == QDialog::Accepted)
+		openFile(dialog.resultPath());
 }

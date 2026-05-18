@@ -1160,6 +1160,7 @@ int TMOImage::WriteHeader(TIFF *pFile, bool HDR)
 	if (HDR)
 	{
 		TIFFSetField(pFile, TIFFTAG_BITSPERSAMPLE, 32, 32, 32);
+		TIFFSetField(pFile, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_IEEEFP);
 	}
 	else
 	{

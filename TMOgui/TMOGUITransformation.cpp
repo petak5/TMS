@@ -8,6 +8,7 @@
 #include <qapplication.h>
 //Added by qt3to4:
 #include <QEvent>
+#include <exception>
 
 QMap<TMOImage *, TMOGUITransformation *> TMOGUITransformation::mapLocal;
 
@@ -136,6 +137,16 @@ void TMOGUITransformation::run()
 			catch (int e)
 			{
 				retval = e;
+			}
+			catch (const std::exception &e)
+			{
+				fprintf(stderr, "TMO operator threw exception: %s\n", e.what());
+				retval = -1;
+			}
+			catch (...)
+			{
+				fprintf(stderr, "TMO operator threw unknown exception\n");
+				retval = -1;
 			}
 			TMOGUICustomEvent *ev = new TMOGUICustomEvent((QEvent::User), this);
 			QApplication::postEvent(pImage, reinterpret_cast<QEvent *>(ev));

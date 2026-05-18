@@ -1,4 +1,5 @@
 #include <QMainWindow>
+#include <QCloseEvent>
 #include <qlist.h>
 //Added by qt3to4:
 #include <QPixmap>
@@ -47,6 +48,7 @@ protected:
 	virtual int SavePosition();
 	virtual int LoadPosition();
 	virtual int Create();
+	void closeEvent(QCloseEvent* event) override;
 	virtual void WindowChangedToolActivated(TMOGUIImage *pImage);
 	void mySetItemChecked(TMOGUIMenu *menu, QMenu *item, int id, bool check);
 	QMdiArea *pWorkspace;
@@ -83,6 +85,7 @@ private:
 public slots:
 	void newFile();
 	void exitFile();
+	void confirmQuit();
 	void openFile();
 	void openFile(int);
 	void openFile(QString);
@@ -117,6 +120,7 @@ public slots:
 	void extractComCommand(int);
 	void mergeCommand();
 	void operationCommand();
+	void createHDRCommand();
 	void OperationFirst(int iImage);
 	void OperationSecond(int iImage);
 	void MergeComponentsRed(int iImage);

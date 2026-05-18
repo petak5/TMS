@@ -112,6 +112,8 @@ int TMOGUIMenu::Create()
     pCommandAct.insert(5, pCommand->addAction("&Merge components", pParent, SLOT(mergeCommand()), 0)); //, 5);
     pCommand->addSeparator();
     pCommandAct.insert(6, pCommand->addAction("Arithmetical &Operation", pParent, SLOT(operationCommand()), 0)); //, 6);
+    pCommand->addSeparator();
+    pHDRCreate = pCommand->addAction("Create &HDR Image...", pParent, SLOT(createHDRCommand()), 0);
     //addAction("&Command", pCommand, SLOT(pCommand));//, 5);
 
     //pHelpItAct.insert(1, pHelpIt->addAction( "&Help", pParent, SLOT(showHelp()), Qt::Key_F1));//, 0);//, 1);

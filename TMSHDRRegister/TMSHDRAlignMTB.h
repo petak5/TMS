@@ -7,7 +7,7 @@
 class TMSHDRAlignMTB
 {
 public:
-    virtual std::vector<cv::Mat> align(std::vector<cv::Mat> images, std::string debugOutput, bool isDebug);
+    virtual std::vector<cv::Mat> align(std::vector<cv::Mat> images);
     TMSHDRAlignMTB();
     virtual ~TMSHDRAlignMTB();
 };

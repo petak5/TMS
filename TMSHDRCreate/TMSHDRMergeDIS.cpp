@@ -3,8 +3,14 @@
 #include <iostream>
 #include <algorithm>
 
-cv::Mat TMSHDRMergeDIS::process(std::vector<cv::Mat>& images, std::vector<float>& times)
+cv::Mat TMSHDRMergeDIS::process(std::vector<cv::Mat>& images, std::vector<float>& times,
+                                 ProgressFn progress)
 {
+    int n = (int)images.size();
+    int toAlign = n - 1;
+
+    if (progress) progress(0, "DIS - optical flow alignment");
+
     int refIdx = fusionSelectReference(images);
     std::cout << "DIS merge - reference image " << refIdx << std::endl;
 
@@ -14,14 +20,21 @@ cv::Mat TMSHDRMergeDIS::process(std::vector<cv::Mat>& images, std::vector<float>
     std::vector<cv::Mat> aligned(images.size());
     aligned[refIdx] = images[refIdx].clone();
 
-    for (int i = 0; i < (int)images.size(); i++)
+    int alignedCount = 0;
+    for (int i = 0; i < n; i++)
     {
         if (i == refIdx) continue;
+        if (progress) progress(5 + alignedCount * 45 / std::max(toAlign, 1),
+            "DIS - aligning image " + std::to_string(alignedCount + 1) + "/" + std::to_string(toAlign));
         std::cout << "DIS merge - aligning image " << i << std::endl;
         aligned[i] = alignFrame(refGray, images[i]);
+        alignedCount++;
     }
 
-    return mergeFrames(aligned, times, refIdx);
+    if (progress) progress(50, "DIS - spatial merge");
+    cv::Mat result = mergeFrames(aligned, times, refIdx);
+    if (progress) progress(95, "DIS - merge complete");
+    return result;
 }
 
 // Align src to refGray using DIS optical flow
@@ -162,7 +175,7 @@ cv::Mat TMSHDRMergeDIS::mergeFrames(const std::vector<cv::Mat>& aligned, const s
         weightSum += weight;
     }
 
-    // Small value to avoiod division by 0
+    // Small value to avoid division by 0
     cv::Mat eps = cv::Mat::ones(rows, cols, CV_32F) * 1e-10f;
     cv::Mat weightSum3;
     cv::merge(std::vector<cv::Mat>{weightSum + eps, weightSum + eps, weightSum + eps}, weightSum3);

@@ -14,7 +14,7 @@ TMSHDRAlignMTB::~TMSHDRAlignMTB()
 {
 }
 
-std::vector<cv::Mat> TMSHDRAlignMTB::align(std::vector<cv::Mat> images, std::string debugOutput, bool isDebug)
+std::vector<cv::Mat> TMSHDRAlignMTB::align(std::vector<cv::Mat> images)
 {
     int numImages = images.size();
     std::vector<cv::Mat> alignedImages;
@@ -41,11 +41,6 @@ std::vector<cv::Mat> TMSHDRAlignMTB::align(std::vector<cv::Mat> images, std::str
     cv::Ptr<cv::AlignMTB> alignMTB = cv::createAlignMTB();
     cv::Point shift = alignMTB->calculateShift(downsampledBwImages[0], downsampledBwImages[1]);
 
-    if (isDebug)
-    {
-        std::cout << "Shift between images at " << resizeRatio << "x downsampled resolution: " << shift.x << ", " << shift.y << std::endl;
-    }
-
     // Coordinate (0, 0) is top left
 
     int w = images[0].cols;
@@ -65,26 +60,8 @@ std::vector<cv::Mat> TMSHDRAlignMTB::align(std::vector<cv::Mat> images, std::str
     int top2 = -bottom1;
     int bottom2 = -top1;
 
-    if (isDebug)
-    {
-        std::cout << "Cropping to: " << left1 << " - " << w - 1 + right1 << std::endl;
-        std::cout << "Cropping to: " << left2 << " - " << w - 1 + right2 << std::endl;
-        std::cout << "Cropping to: " << top1 << " - " << w - 1 + bottom1 << std::endl;
-        std::cout << "Cropping to: " << top2 << " - " << w - 1 + bottom2 << std::endl;
-    }
-
     cv::Mat croppedImage1 = images[0](cv::Range(top1, h - 1 + bottom1), cv::Range(left1, w - 1 + right1));
     cv::Mat croppedImage2 = images[1](cv::Range(top2, h - 1 + bottom2), cv::Range(left2, w - 1 + right2));
-
-    if (isDebug)
-    {
-        std::cout << "Cropped" << std::endl;
-
-        std::string savePath1 = debugOutput + "/cropped1.jpg";
-        cv::imwrite(savePath1, croppedImage1);
-        std::string savePath2 = debugOutput + "/cropped2.jpg";
-        cv::imwrite(savePath2, croppedImage2);
-    }
 
     std::vector<cv::Mat> updatedImages;
     updatedImages.push_back(croppedImage1);
@@ -101,13 +78,6 @@ std::vector<cv::Mat> TMSHDRAlignMTB::align(std::vector<cv::Mat> images, std::str
 
     // Finally use MTB align, updated images are already roughly aligned
     alignMTB->process(updatedImages, alignedImages);
-
-    shift = alignMTB->calculateShift(bwImages[0], bwImages[1]);
-
-    if (isDebug)
-    {
-        std::cout << "Shift between fine-tuned images: " << shift.x << ", " << shift.y << std::endl;
-    }
 
     return alignedImages;
 }

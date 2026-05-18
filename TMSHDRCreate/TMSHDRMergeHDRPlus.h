@@ -1,4 +1,5 @@
 #pragma once
+#include "TMSHDRProgress.h"
 #include <opencv2/opencv.hpp>
 #include <vector>
 
@@ -15,7 +16,8 @@ public:
                                 int n_levels = 4,
                                 float c_temporal = 2.0f);
 
-    cv::Mat process(std::vector<cv::Mat>& images, std::vector<float>& times);
+    cv::Mat process(std::vector<cv::Mat>& images, std::vector<float>& times,
+                    ProgressFn progress = nullptr);
 
 private:
     // Shot noise

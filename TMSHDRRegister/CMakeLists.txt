@@ -7,27 +7,17 @@ if(COMMAND cmake_policy)
   cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
-INCLUDE_DIRECTORIES(
-../tmolib/
-.
-)
+FIND_PACKAGE(OpenCV REQUIRED)
+IF(OpenCV_VERSION VERSION_LESS "2.4.9")
+  message(FATAL_ERROR "ERROR: Can't find OpenCV 2.4.9+")
+ENDIF()
 
-#Set up libraries to link with all found packages
-LINK_LIBRARIES (
-dl
-tmo
-pthread
-${CMAKE_DL_LIBS}
-)
-
-SET(TMSHDRREGISTER_SOURCES
+SET(TMSHDRREGISTERLIB_SOURCES
  TMSHDRRegister.cpp
  TMSHDRAlignHomography.cpp
  TMSHDRAlignOpticalFlow.cpp
  TMSHDRAlignMTB.cpp
- main.cpp
 )
-
 
 SET(TMSHDRREGISTER_HEADERS
  TMSHDRRegister.h
@@ -36,13 +26,20 @@ SET(TMSHDRREGISTER_HEADERS
  TMSHDRAlignMTB.h
 )
 
-
-
+ADD_LIBRARY(TMSHDRRegisterLib STATIC ${TMSHDRREGISTERLIB_SOURCES})
+TARGET_INCLUDE_DIRECTORIES(TMSHDRRegisterLib PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../tmolib
+    ${OpenCV_INCLUDE_DIRS}
+)
+TARGET_LINK_LIBRARIES(TMSHDRRegisterLib
+    tmo
+    ${OpenCV_LIBS}
+)
 
 SET(EXE_NAME "tmshdrregister${TAG_VERSION}" )
-ADD_EXECUTABLE(${EXE_NAME}
-  ${TMSHDRREGISTER_SOURCES}
-)
+ADD_EXECUTABLE(${EXE_NAME} main.cpp)
+TARGET_LINK_LIBRARIES(${EXE_NAME} TMSHDRRegisterLib dl pthread)
 
 add_custom_command( TARGET ${EXE_NAME} POST_BUILD
         COMMAND true

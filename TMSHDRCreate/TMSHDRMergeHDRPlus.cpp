@@ -49,8 +49,14 @@ TMSHDRMergeHDRPlus::TMSHDRMergeHDRPlus(float ls,
       c_temporal(c_temporal)
 {}
 
-cv::Mat TMSHDRMergeHDRPlus::process(std::vector<cv::Mat>& images, std::vector<float>& times)
+cv::Mat TMSHDRMergeHDRPlus::process(std::vector<cv::Mat>& images, std::vector<float>& times,
+                                     ProgressFn progress)
 {
+    int n = (int)images.size();
+    int toAlign = n - 1;
+
+    if (progress) progress(0, "HDR+ - alignment");
+
     int refIdx = fusionSelectReference(images);
     std::cout << "HDR+ - reference image: " << refIdx << std::endl;
 
@@ -68,14 +74,21 @@ cv::Mat TMSHDRMergeHDRPlus::process(std::vector<cv::Mat>& images, std::vector<fl
     cv::Mat refGray = toEqualizedGray(images[refIdx]);
 
     std::vector<cv::Mat> offsets(images.size());
-    for (int i = 0; i < (int)images.size(); i++)
+    int alignedCount = 0;
+    for (int i = 0; i < n; i++)
     {
         if (i == refIdx) continue;
+        if (progress) progress(5 + alignedCount * 45 / std::max(toAlign, 1),
+            "HDR+ - aligning image " + std::to_string(alignedCount + 1) + "/" + std::to_string(toAlign));
         std::cout << "HDR+ - aligning image " << i << std::endl;
         offsets[i] = alignFrame(refGray, toEqualizedGray(images[i]));
+        alignedCount++;
     }
 
-    return mergeFrames(images, offsets, times, refIdx);
+    if (progress) progress(50, "HDR+ - merging frames");
+    cv::Mat result = mergeFrames(images, offsets, times, refIdx);
+    if (progress) progress(95, "HDR+ - merge complete");
+    return result;
 }
 
 cv::Mat TMSHDRMergeHDRPlus::alignFrame(const cv::Mat& refGray, const cv::Mat& srcGray)

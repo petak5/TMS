@@ -82,6 +82,7 @@ public:
 	virtual ~TMOGUIMenu();
 	//! Public because of the histogram menu item.
 	QMenu *pView; // QMenu
+	QAction *pHDRCreate;
 
 public slots:
 	//! Slot for signal when window is changed.

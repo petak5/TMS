@@ -1,4 +1,5 @@
 #pragma once
+#include "TMSHDRProgress.h"
 #include <opencv2/opencv.hpp>
 #include <onnxruntime_cxx_api.h>
 #include <string>
@@ -11,7 +12,8 @@ class TMSHDRMergeSAFNet
 public:
     explicit TMSHDRMergeSAFNet(const std::string& modelPath, int tileSize = 2048, int overlap  = 128);
 
-    cv::Mat process(const std::vector<cv::Mat>& images, const std::vector<float>& times);
+    cv::Mat process(const std::vector<cv::Mat>& images, const std::vector<float>& times,
+                    ProgressFn progress = nullptr);
 
 private:
     Ort::Env env;

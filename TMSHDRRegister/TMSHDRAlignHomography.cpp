@@ -13,7 +13,7 @@ TMSHDRAlignHomography::~TMSHDRAlignHomography()
 {
 }
 
-std::vector<cv::Mat> TMSHDRAlignHomography::align(std::vector<cv::Mat> images, int resizeRatio, std::string debugOutput, bool isDebug)
+std::vector<cv::Mat> TMSHDRAlignHomography::align(std::vector<cv::Mat> images, int resizeRatio)
 {
     int numImages = images.size();
     std::vector<cv::Mat> alignedImages;
@@ -21,226 +21,105 @@ std::vector<cv::Mat> TMSHDRAlignHomography::align(std::vector<cv::Mat> images, i
 
     for (int i = 0; i < numImages; i++)
     {
-        std::cout << "Original size: " << images[i].size() << std::endl;
-        std::cout << "Adjusting image for SIFT" << std::endl;
-
         cv::Mat bw_image;
-
         cv::cvtColor(images[i], bw_image, cv::COLOR_BGR2GRAY);
-
         cv::equalizeHist(bw_image, bw_image);
-
         cv::resize(bw_image, bw_image, cv::Size(bw_image.cols / resizeRatio, bw_image.rows / resizeRatio));
-        std::cout << "Resized size: " << bw_image.size() << std::endl;
-
         bw_images.push_back(bw_image);
     }
 
     std::cout << "Initializing SIFT..." << std::endl;
     cv::Ptr<cv::SIFT> sift = cv::SIFT::create();
-    std::cout << "Done" << std::endl;
 
-    std::vector<std::vector<cv::KeyPoint>> keypoints;
-    std::vector<cv::Mat> descriptors;
+    std::vector<std::vector<cv::KeyPoint>> keypoints(numImages);
+    std::vector<cv::Mat> descriptors(numImages);
 
     for (int i = 0; i < numImages; i++)
     {
-        std::cout << "Detecting features in image " << i << " ..." << std::endl;
-
-        std::vector<cv::KeyPoint> keypoint;
-        cv::Mat descriptor;
-
-        sift->detectAndCompute(bw_images[i], cv::noArray(), keypoint, descriptor);
-
-        std::cout << "Done\nFeatures: " << keypoint.size() << std::endl;
-
-        keypoints.push_back(keypoint);
-        descriptors.push_back(descriptor);
+        std::cout << "Detecting features in image " << i << "..." << std::endl;
+        sift->detectAndCompute(bw_images[i], cv::noArray(), keypoints[i], descriptors[i]);
+        std::cout << "Features: " << keypoints[i].size() << std::endl;
     }
 
-    std::cout << "Matching features..." << std::endl;
     cv::FlannBasedMatcher flann(
         cv::makePtr<cv::flann::KDTreeIndexParams>(5),
         cv::makePtr<cv::flann::SearchParams>(50));
 
-    std::vector<std::vector<cv::DMatch>> matches;
-    flann.knnMatch(descriptors[0], descriptors[1], matches, 2);
-    std::cout << "Done\nMatches: " << matches.size() << std::endl;
-
-    std::vector<cv::DMatch> goodMatches;
-    for (const auto &m : matches)
-    {
-        if (m[0].distance < 0.7 * m[1].distance)
-        {
-            goodMatches.push_back(m[0]);
-        }
-    }
-
-    cv::Mat mask;
-    cv::Mat M;
     const int MIN_MATCH_COUNT = 10;
-    if (goodMatches.size() > MIN_MATCH_COUNT)
-    {
-        std::vector<cv::Point2f> src_pts, dst_pts;
+    const float w = (float)images[0].cols;
+    const float h = (float)images[0].rows;
 
-        for (const auto &m : goodMatches)
+    float crop_left = 0, crop_top = 0, crop_right = w, crop_bottom = h;
+
+    std::vector<cv::Mat> warpedImages;
+    warpedImages.push_back(images[0]);
+
+    for (int i = 1; i < numImages; i++)
+    {
+        std::cout << "Matching image " << i << " against reference..." << std::endl;
+
+        std::vector<std::vector<cv::DMatch>> matches;
+        flann.knnMatch(descriptors[i], descriptors[0], matches, 2);
+
+        std::vector<cv::DMatch> goodMatches;
+        for (const auto& m : matches)
+            if (m[0].distance < 0.7 * m[1].distance)
+                goodMatches.push_back(m[0]);
+
+        std::cout << "Good matches: " << goodMatches.size() << std::endl;
+
+        if ((int)goodMatches.size() <= MIN_MATCH_COUNT)
         {
-            src_pts.push_back(keypoints[0][m.queryIdx].pt * resizeRatio);
-            dst_pts.push_back(keypoints[1][m.trainIdx].pt * resizeRatio);
+            std::cout << "Not enough matches for image " << i << " - " << goodMatches.size() << "/" << MIN_MATCH_COUNT << std::endl;
+            return alignedImages;
         }
 
-        M = cv::findHomography(src_pts, dst_pts, cv::RANSAC, 5.0, mask);
-    }
-    else
-    {
-        std::cout << "Not enough matches are found - " << goodMatches.size() << "/" << MIN_MATCH_COUNT << std::endl;
-        return alignedImages;
-    }
+        std::vector<cv::Point2f> src_pts, dst_pts;
+        for (const auto& m : goodMatches)
+        {
+            src_pts.push_back(keypoints[i][m.queryIdx].pt * resizeRatio);
+            dst_pts.push_back(keypoints[0][m.trainIdx].pt * resizeRatio);
+        }
 
-    if (isDebug)
-    {
-        std::cout << "Drawing matches..." << std::endl;
+        cv::Mat mask;
+        cv::Mat M = cv::findHomography(src_pts, dst_pts, cv::RANSAC, 5.0, mask);
+        if (M.empty())
+        {
+            std::cout << "Homography failed for image " << i << std::endl;
+            return alignedImages;
+        }
 
-        cv::Mat imgKeypoints1, imgKeypoints2;
-        drawKeypoints(bw_images[0], keypoints[0], imgKeypoints1, cv::Scalar::all(-1), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-        drawKeypoints(bw_images[1], keypoints[1], imgKeypoints2, cv::Scalar::all(-1), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-        cv::imwrite(debugOutput + "/keypoints1.jpg", imgKeypoints1);
-        cv::imwrite(debugOutput + "/keypoints2.jpg", imgKeypoints2);
+        cv::Mat warped;
+        cv::warpPerspective(images[i], warped, M, cv::Size(images[0].cols, images[0].rows),
+                            cv::INTER_LINEAR, cv::BORDER_REPLICATE);
+        warpedImages.push_back(warped);
 
-        cv::Mat imgMatches;
-        cv::drawMatches(bw_images[0], keypoints[0], bw_images[1], keypoints[1], goodMatches, imgMatches, cv::Scalar::all(-1), cv::Scalar::all(-1), mask, cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+        // Find crop region
+        std::vector<cv::Point2f> corners = {
+            {0.f, 0.f},
+            {0.f, (float)(images[i].rows - 1)},
+            {(float)(images[i].cols - 1), 0.f},
+            {(float)(images[i].cols - 1), (float)(images[i].rows - 1)}
+        };
+        std::vector<cv::Point2f> tc;
+        cv::perspectiveTransform(corners, tc, M);
 
-        cv::imwrite(debugOutput + "/matches.jpg", imgMatches);
-
-        std::cout << "Done" << std::endl;
-    }
-
-    // Source image (index 0) is warped to match Target image (index 1)
-
-    // Cropped and aligned
-    cv::Mat uncropped_aligned_s = align_image(images[0], M);
-    cv::Mat cropped_aligned_s = crop_image(uncropped_aligned_s, M);
-    cv::Mat cropped_t = crop_image(images[1], M);
-
-    if (isDebug)
-    {
-        // Save uncropped and aligned images
-        cv::imwrite(debugOutput + "/uncropped_target.jpg", images[1]);
-        cv::imwrite(debugOutput + "/uncropped_aligned_s.jpg", uncropped_aligned_s);
+        crop_left   = std::max(crop_left,   std::ceil(std::max({0.f, tc[0].x, tc[1].x})));
+        crop_right  = std::min(crop_right,  std::floor(std::min({w,  tc[2].x, tc[3].x})));
+        crop_top    = std::max(crop_top,    std::ceil(std::max({0.f, tc[0].y, tc[2].y})));
+        crop_bottom = std::min(crop_bottom, std::floor(std::min({h,  tc[1].y, tc[3].y})));
     }
 
-    if (isDebug)
-    {
-        // Extended and aligned images
-        cv::Mat extended_aligned_s, extended_t;
-        std::tie(extended_aligned_s, extended_t) = align_and_resize_images(images[0], images[1], M);
+    const int margin = 1;
+    cv::Rect cropRect(
+        (int)crop_left + margin,
+        (int)crop_top + margin,
+        (int)(crop_right - crop_left) - 2 * margin,
+        (int)(crop_bottom - crop_top) - 2 * margin);
 
-        // Save extended aligned images
-        cv::imwrite(debugOutput + "/extended_aligned_s.jpg", extended_aligned_s);
-        cv::imwrite(debugOutput + "/extended_t.jpg", extended_t);
-
-        // Diff images
-        cv::Mat diff_orig, diff_cropped_1, diff_cropped_2, diff_extended;
-        cv::absdiff(images[0], images[1], diff_orig);
-        cv::absdiff(cropped_aligned_s, cropped_t, diff_cropped_1);
-        cv::absdiff(cropped_t, cropped_aligned_s, diff_cropped_2);
-        cv::absdiff(extended_aligned_s, extended_t, diff_extended);
-
-        // Save diff images
-        cv::imwrite(debugOutput + "/diff_orig.jpg", diff_orig);
-        cv::imwrite(debugOutput + "/diff_cropped_1.jpg", diff_cropped_1);
-        cv::imwrite(debugOutput + "/diff_cropped_2.jpg", diff_cropped_2);
-        cv::imwrite(debugOutput + "/diff_extended.jpg", diff_extended);
-    }
-
-    alignedImages.push_back(cropped_aligned_s);
-    alignedImages.push_back(cropped_t);
+    for (const auto& img : warpedImages)
+        alignedImages.push_back(img(cropRect));
 
     return alignedImages;
 }
 
-cv::Mat TMSHDRAlignHomography::align_image(const cv::Mat &image, const cv::Mat &homography)
-{
-    cv::Mat aligned;
-    // BORDER_REPLICATE prevents dark fringe: bilinear interpolation near the edge
-    // blends with replicated edge pixels instead of black.
-    cv::warpPerspective(image, aligned, homography, cv::Size(image.cols, image.rows), cv::INTER_LINEAR, cv::BORDER_REPLICATE);
-    return aligned;
-}
-
-std::pair<cv::Mat, cv::Mat> TMSHDRAlignHomography::align_and_resize_images(const cv::Mat &image_s, const cv::Mat &image_t, const cv::Mat &homography)
-{
-    // Get the dimensions of the source image
-    float h = image_s.rows;
-    float w = image_s.cols;
-
-    // Define the four corners of the source image
-    std::vector<cv::Point2f> points = {cv::Point2f(0, 0), cv::Point2f(0, h - 1), cv::Point2f(w - 1, 0), cv::Point2f(w - 1, h - 1)};
-
-    // Transform the points using the homography matrix
-    std::vector<cv::Point2f> points_transformed;
-    cv::perspectiveTransform(points, points_transformed, homography);
-
-    // Compute the bounding box of the transformed points
-    int top = std::ceil(std::abs(0 + std::min({0.f, points_transformed[0].y, points_transformed[1].y, points_transformed[2].y, points_transformed[3].y})));
-    int bottom = std::ceil(std::abs(h - std::max({h, points_transformed[0].y, points_transformed[1].y, points_transformed[2].y, points_transformed[3].y})));
-    int left = std::ceil(std::abs(0 - std::min({0.f, points_transformed[0].x, points_transformed[1].x, points_transformed[2].x, points_transformed[3].x})));
-    int right = std::ceil(std::abs(w - std::max({w, points_transformed[0].x, points_transformed[1].x, points_transformed[2].x, points_transformed[3].x})));
-
-    // Extend the source image by adding borders
-    cv::Mat extended_image;
-    cv::copyMakeBorder(image_s, extended_image, top, bottom, left, right, cv::BORDER_CONSTANT, cv::Scalar(0));
-
-    // Adjust the points by adding the offsets (left, top)
-    for (auto &pt : points)
-    {
-        pt.x += left;
-        pt.y += top;
-    }
-    for (auto &pt : points_transformed)
-    {
-        pt.x += left;
-        pt.y += top;
-    }
-
-    // Compute the new homography using the transformed points
-    cv::Mat new_homography = cv::findHomography(points, points_transformed, cv::RANSAC, 5.0);
-
-    // Warp the extended source image using the new homography
-    cv::Mat aligned_image;
-    cv::warpPerspective(extended_image, aligned_image, new_homography, cv::Size(w + left + right, h + top + bottom));
-
-    // Extend the target image by adding borders
-    cv::Mat extended_t;
-    cv::copyMakeBorder(image_t, extended_t, top, bottom, left, right, cv::BORDER_CONSTANT, cv::Scalar(0));
-
-    // Return the aligned image and extended target image
-    return std::make_pair(aligned_image, extended_t);
-}
-
-cv::Mat TMSHDRAlignHomography::crop_image(const cv::Mat &image, const cv::Mat &homography)
-{
-    // Get the dimensions of the image
-    float h = image.rows;
-    float w = image.cols;
-
-    // Define the four corners of the image
-    std::vector<cv::Point2f> points = {cv::Point2f(0, 0), cv::Point2f(0, h - 1), cv::Point2f(w - 1, 0), cv::Point2f(w - 1, h - 1)};
-
-    // Transform the points using the homography matrix
-    std::vector<cv::Point2f> points_transformed;
-    cv::perspectiveTransform(points, points_transformed, homography);
-
-    // Calculate the bounding box of the transformed points
-    float left_x = std::ceil(std::max(std::max(0.f, points_transformed[0].x), points_transformed[1].x));
-    float right_x = std::floor(std::min(std::min(w, points_transformed[2].x), points_transformed[3].x));
-    float top_y = std::ceil(std::max(std::max(0.f, points_transformed[0].y), points_transformed[2].y));
-    float bottom_y = std::floor(std::min(std::min(h, points_transformed[1].y), points_transformed[3].y));
-
-    // 1-pixel inward margin avoids the interpolation boundary for non-axis-aligned homographies
-    const int margin = 1;
-    cv::Rect crop_region(left_x + margin, top_y + margin, right_x - left_x - 2 * margin, bottom_y - top_y - 2 * margin);
-    cv::Mat cropped_image = image(crop_region);
-
-    return cropped_image;
-}

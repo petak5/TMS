@@ -18,11 +18,15 @@ if(CMAKE_VERSION VERSION_LESS "3.7.0")
 endif()
 
 find_package(Qt5 COMPONENTS Widgets PrintSupport REQUIRED)
+FIND_PACKAGE(OpenCV REQUIRED)
 
 INCLUDE_DIRECTORIES(
 ${CMAKE_BINARY_DIR}
 ${CMAKE_CURRENT_BINARY_DIR}
 ../tmolib/
+../TMSHDRCreate/
+../TMSHDRRegister/
+${OpenCV_INCLUDE_DIRS}
 .
 )
 
@@ -38,6 +42,9 @@ SET(TMO_SOURCES
 lqstring.cpp
 main.cpp
 switch.cpp
+TMOGUIHDRCreate.cpp
+TMOGUIHDRCreateWorker.cpp
+TMOGUIAlignDialog.cpp
 TMOFilters.cpp
 TMOGUIAdjust.cpp
 TMOGUIAdjustValues.cpp
@@ -74,6 +81,9 @@ TMOGUIStyle.cpp
 SET(TMO_HEADERS
 gamma.h
 lqstring.h
+TMOGUIHDRCreate.h
+TMOGUIHDRCreateWorker.h
+TMOGUIAlignDialog.h
 style.h
 switch.h
 resources.ui.h
@@ -135,7 +145,10 @@ ADD_EXECUTABLE(${EXE_NAME}
   ${RESOURCE_ADDED}
 )
 
-target_link_libraries(tmogui Qt5::Widgets Qt5::PrintSupport)
+target_link_libraries(tmogui Qt5::Widgets Qt5::PrintSupport
+    TMSHDRCreateLib TMSHDRRegisterLib
+    ${OpenCV_LIBS}
+)
 # add_custom_command( TARGET ${EXE_NAME} POST_BUILD
 #   COMMAND cp -r tmogui ../
 # )

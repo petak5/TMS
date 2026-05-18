@@ -30,8 +30,6 @@
 #include "TMSHDRAlignOpticalFlow.h"
 #include "TMSHDRAlignMTB.h"
 
-#define DEBUG true
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -86,7 +84,6 @@ int TMSHDRRegister::main(int argc, char *argv[])
         return 1;
     }
 
-    std::string debugOutput = outputFolder + "/debug/";
     std::vector<cv::Mat> images;
 
     int numImages = 2;
@@ -111,11 +108,11 @@ int TMSHDRRegister::main(int argc, char *argv[])
     // Feature points with homography and Optical Flow
     TMSHDRAlignHomography alignMethod;
     // TMSHDRAlignOpticalFlow alignMethod;
-    std::vector<cv::Mat> alignedImages = alignMethod.align(images, RESIZE_RATIO, debugOutput, DEBUG);
+    std::vector<cv::Mat> alignedImages = alignMethod.align(images, RESIZE_RATIO);
 
     // MTB
     // TMSHDRAlignMTB alignMethod;
-    // std::vector<cv::Mat> alignedImages = alignMethod.align(images, debugOutput, DEBUG);
+    // std::vector<cv::Mat> alignedImages = alignMethod.align(images);
 
     // Save cropped images
     cv::imwrite(outputFolder + "/cropped_s.jpg", alignedImages[0]);
@@ -124,6 +121,75 @@ int TMSHDRRegister::main(int argc, char *argv[])
     std::cout << "Done all" << std::endl;
 
     return 0;
+}
+
+std::string TMSHDRRegister::alignToFolder(
+    const std::vector<std::string>& inputPaths,
+    RegistrationMethod method,
+    const std::string& outputFolder,
+    std::vector<std::string>& alignedPaths,
+    ProgressFn progress)
+{
+    if (inputPaths.size() < 2)
+        return "At least 2 images required for registration";
+
+    if (progress) progress(0, "Registering images");
+
+    std::vector<cv::Mat> images;
+    for (const auto& path : inputPaths)
+    {
+        cv::Mat img = cv::imread(path);
+        if (img.empty()) return "Failed to load: " + path;
+        images.push_back(img);
+    }
+
+    struct stat st = {};
+    if (stat(outputFolder.c_str(), &st) != 0)
+        mkdir(outputFolder.c_str(), 0755);
+
+    const char* methodName = (method == RegistrationMethod::HOMOGRAPHY) ? "Homography"
+                           : (method == RegistrationMethod::OPTICAL_FLOW) ? "Optical Flow"
+                           : "MTB";
+    if (progress) progress(10, std::string("Registering images (") + methodName + ")");
+
+    std::vector<cv::Mat> aligned;
+    if (method == RegistrationMethod::MTB)
+    {
+        if (images.size() == 2)
+        {
+            TMSHDRAlignMTB alignMTB;
+            aligned = alignMTB.align(images);
+        }
+        else
+        {
+            cv::Ptr<cv::AlignMTB> alignMTB = cv::createAlignMTB();
+            alignMTB->process(images, aligned);
+        }
+    }
+    else if (method == RegistrationMethod::HOMOGRAPHY)
+    {
+        TMSHDRAlignHomography alignH;
+        aligned = alignH.align(images, RESIZE_RATIO);
+    }
+    else
+    {
+        TMSHDRAlignOpticalFlow alignOF;
+        aligned = alignOF.align(images, RESIZE_RATIO);
+    }
+
+    if (progress) progress(80, "Saving aligned images");
+
+    alignedPaths.clear();
+    for (size_t i = 0; i < aligned.size(); i++)
+    {
+        std::string outPath = outputFolder + "/aligned_" + std::to_string(i) + ".png";
+        if (!cv::imwrite(outPath, aligned[i]))
+            return "Failed to save aligned image: " + outPath;
+        alignedPaths.push_back(outPath);
+    }
+
+    if (progress) progress(95, "Registration complete");
+    return "";
 }
 
 void TMSHDRRegister::Help()

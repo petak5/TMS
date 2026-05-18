@@ -78,7 +78,8 @@ cv::Mat TMSHDRMergeSAFNet::runTile(const std::vector<cv::Mat>& tiles, const std:
     return out(cv::Range(0, tH), cv::Range(0, tW)).clone();
 }
 
-cv::Mat TMSHDRMergeSAFNet::process(const std::vector<cv::Mat>& images, const std::vector<float>& times)
+cv::Mat TMSHDRMergeSAFNet::process(const std::vector<cv::Mat>& images, const std::vector<float>& times,
+                                    ProgressFn progress)
 {
     if (images.size() != 3 || times.size() != 3)
         throw std::runtime_error("SAFNet requires exactly 3 images and 3 exposure times");
@@ -94,7 +95,10 @@ cv::Mat TMSHDRMergeSAFNet::process(const std::vector<cv::Mat>& images, const std
     if (H <= tileSize && W <= tileSize)
     {
         std::cout << "SAFNet - merging " << W << "x" << H << std::endl;
-        return runTile(images, expos);
+        if (progress) progress(0, "SAFNet - running inference");
+        cv::Mat result = runTile(images, expos);
+        if (progress) progress(95, "SAFNet - done");
+        return result;
     }
 
     std::cout << "SAFNet - merging " << W << "x" << H << " in tiles of " << tileSize << "px with " << overlap << "px overlap" << std::endl;
@@ -105,6 +109,8 @@ cv::Mat TMSHDRMergeSAFNet::process(const std::vector<cv::Mat>& images, const std
     int step = tileSize - overlap;
     int nTilesY = (H <= tileSize) ? 1 : ((H - tileSize + step - 1) / step + 1);
     int nTilesX = (W <= tileSize) ? 1 : ((W - tileSize + step - 1) / step + 1);
+    int totalTiles = nTilesY * nTilesX;
+    int doneCount = 0;
 
     // Linearly taper tile edges
     auto make1DWeight = [&](int size, bool taperStart, bool taperEnd) {
@@ -126,11 +132,15 @@ cv::Mat TMSHDRMergeSAFNet::process(const std::vector<cv::Mat>& images, const std
             int x1 = std::min(x0 + tileSize, W);
             int tH = y1 - y0, tW = x1 - x0;
 
+            if (progress) progress(doneCount * 90 / totalTiles,
+                "SAFNet - tile " + std::to_string(doneCount + 1) + "/" + std::to_string(totalTiles));
+
             std::vector<cv::Mat> tiles(3);
             for (int i = 0; i < 3; i++)
                 tiles[i] = images[i](cv::Range(y0, y1), cv::Range(x0, x1));
 
             cv::Mat tileOut = runTile(tiles, expos);
+            doneCount++;
 
             std::cout << " Tile (" << ty + 1 << "/" << nTilesY << ", " << tx + 1 << "/" << nTilesX << ") done" << std::endl;
 
@@ -145,6 +155,8 @@ cv::Mat TMSHDRMergeSAFNet::process(const std::vector<cv::Mat>& images, const std
             wtSum(cv::Range(y0, y1), cv::Range(x0, x1))  += wt2D;
         }
     }
+
+    if (progress) progress(95, "SAFNet - compositing tiles");
 
     // Normalise by accumulated per-pixel weights
     cv::Mat wtSum3;
